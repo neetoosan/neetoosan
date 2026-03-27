@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Projects by Neetoosan - backend systems, Flutter apps, AI platforms, and software engineering work." />
+  <title>Projects | Neetoosan</title>
+  <link rel="icon" type="image/png" href="asset/favicon.png" />
+  <link rel="apple-touch-icon" href="asset/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="nLoader" role="status" aria-label="Loading Neetoosan portfolio">
+    <img class="nLoader__logo" src="asset/logo_concept.png" alt="Neetoosan N logo" />
+    <span class="nLoader__text">Neetoosan</span>
+  </div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo" aria-label="Neetoosan home">
+        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
+        NEETOOSAN<span>.</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+      <nav class="site-nav" id="siteNav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero small">
+      <div class="container">
+        <p class="eyebrow">Selected Projects</p>
+        <h1>Built around real problems, not just pretty screens.</h1>
+        <p>Explore software systems, mobile apps, AI-assisted tools, and backend-driven solutions.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container filter-row">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="backend">Backend</button>
+        <button class="filter-btn" data-filter="mobile">Mobile</button>
+        <button class="filter-btn" data-filter="ai">AI</button>
+        <button class="filter-btn" data-filter="security">Security</button>
+      </div>
+
+      <div class="container projects-grid" id="projectsGrid">
+        <article class="project-card reveal" data-category="backend security">
+          <div class="project-top">
+            <span class="project-badge">Backend</span>
+            <h3>Asset Management System</h3>
+          </div>
+          <p>
+            A robust Python-based system supporting multiple users, custom permissions, PostgreSQL storage,
+            and efficient data operations for large asset records.
+          </p>
+          <div class="tag-list">
+            <span>Python</span>
+            <span>PySide6</span>
+            <span>PostgreSQL</span>
+            <span>SQLAlchemy</span>
+          </div>
+          <a class="text-link" href="https://github.com/neetoosan/asset_management" target="_blank" rel="noopener">View Repository</a>
+        </article>
+
+        <article class="project-card reveal" data-category="backend">
+          <div class="project-top">
+            <span class="project-badge">Backend</span>
+            <h3>Loan Management System</h3>
+          </div>
+          <p>
+            A backend-driven financial platform with role-based access control, improved tracking efficiency,
+            and practical workflow support for loan records.
+          </p>
+          <div class="tag-list">
+            <span>Python</span>
+            <span>FastAPI</span>
+            <span>RBAC</span>
+            <span>SQL</span>
+          </div>
+          <a class="text-link" href="https://github.com/neetoosan/LMS-PYTHON" target="_blank" rel="noopener">View Repository</a>
+        </article>
+
+        <article class="project-card reveal" data-category="ai security backend">
+          <div class="project-top">
+            <span class="project-badge">AI</span>
+            <h3>AI SafeHub</h3>
+          </div>
+          <p>
+            An anonymous reporting platform for schools and workplaces with secure architecture and AI-assisted categorization for urgent case visibility.
+          </p>
+          <div class="tag-list">
+            <span>Python</span>
+            <span>AI</span>
+            <span>Secure Reporting</span>
+            <span>Backend</span>
+          </div>
+          <a class="text-link" href="https://github.com/neetoosan/AI_safehub" target="_blank" rel="noopener">View Repository</a>
+        </article>
+
+        <article class="project-card reveal" data-category="mobile">
+          <div class="project-top">
+            <span class="project-badge">Mobile</span>
+            <h3>PlaySphere</h3>
+          </div>
+          <p>
+            A Flutter-based media platform that supports streaming, video content, and payment-powered access for creators and viewers.
+          </p>
+          <div class="tag-list">
+            <span>Flutter</span>
+            <span>Dart</span>
+            <span>Payments</span>
+            <span>Media</span>
+          </div>
+          <a class="text-link" href="https://github.com/neetoosan/playsphere" target="_blank" rel="noopener">View Repository</a>
+        </article>
+
+        <article class="project-card reveal" data-category="ai">
+          <div class="project-top">
+            <span class="project-badge">AI</span>
+            <h3>Emotion Journal</h3>
+          </div>
+          <p>
+            An AI-powered emotional journaling project using HTML, CSS, JavaScript, and Flask for a more supportive user experience.
+          </p>
+          <div class="tag-list">
+            <span>HTML</span>
+            <span>CSS</span>
+            <span>JavaScript</span>
+            <span>Flask</span>
+          </div>
+          <a class="text-link" href="https://github.com/kenzki63/emotion_journal" target="_blank" rel="noopener">View Repository</a>
+        </article>
+
+        <article class="project-card reveal" data-category="backend">
+          <div class="project-top">
+            <span class="project-badge">Data</span>
+            <h3>COVID-19 Global Data Tracker</h3>
+          </div>
+          <p>
+            A Python-driven data tracker project focused on collecting, organizing, and presenting global COVID-19 data clearly.
+          </p>
+          <div class="tag-list">
+            <span>Python</span>
+            <span>Data</span>
+            <span>Tracking</span>
+            <span>Analytics</span>
+          </div>
+          <a class="text-link" href="https://github.com/neetoosan/Covid-19-global-data-tracker" target="_blank" rel="noopener">View Repository</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <div class="footer-logo">
+        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
+        <span>From Isolation to Innovation<span>.</span></span>
+      </div>
+      <div>
+        <a href="https://github.com/neetoosan" target="_blank" rel="noopener">GitHub</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/loader.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/projects.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Neetoosan for software engineering, backend, mobile, AI, and cybersecurity-related opportunities." />
+  <title>Contact | Neetoosan</title>
+  <link rel="icon" type="image/png" href="asset/favicon.png" />
+  <link rel="apple-touch-icon" href="asset/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="nLoader" role="status" aria-label="Loading Neetoosan portfolio">
+    <img class="nLoader__logo" src="asset/logo_concept.png" alt="Neetoosan N logo" />
+    <span class="nLoader__text">Neetoosan</span>
+  </div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo" aria-label="Neetoosan home">
+        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
+        NEETOOSAN<span>.</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+      <nav class="site-nav" id="siteNav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero small">
+      <div class="container">
+        <p class="eyebrow">Let’s Work Together</p>
+        <h1>Open to engineering opportunities and collaborations.</h1>
+        <p>I’m available for freelance work, contract roles, and great product-building conversations.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-grid">
+        <div class="contact-card reveal">
+          <h2>Contact Details</h2>
+          <div class="contact-item">
+            <span>Email</span>
+            <a href="mailto:tobimolla44@gmail.com">tobimolla44@gmail.com</a>
+          </div>
+          <div class="contact-item">
+            <span>GitHub</span>
+            <a href="https://github.com/neetoosan" target="_blank" rel="noopener">github.com/neetoosan</a>
+          </div>
+          <div class="contact-item">
+            <span>LinkedIn</span>
+            <a href="https://www.linkedin.com/in/israel-oyekanmi-876148392/" target="_blank" rel="noopener">View Profile</a>
+          </div>
+          <div class="contact-item">
+            <span>Location</span>
+            <p>Lagos, Nigeria</p>
+          </div>
+        </div>
+
+        <form class="contact-form reveal" id="contactForm">
+          <h2>Quick Message</h2>
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="6" placeholder="Tell me about your project or role" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+          <p class="form-note" id="formNote"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <div class="footer-logo">
+        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
+        <span>From Isolation to Innovation<span>.</span></span>
+      </div>
+      <div>
+        <a href="https://github.com/neetoosan" target="_blank" rel="noopener">GitHub</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/loader.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
