@@ -44,21 +44,55 @@
       </div>
     </section>
 
-    <section class="section">
-      <div class="container about-grid">
-        <div class="about-copy reveal">
-          <h2>My Story</h2>
-          <p>
-            I’m Israel Oyekanmi, a software engineer with hands-on experience in mobile development,
-            backend engineering, AI-assisted workflows, and cybersecurity-focused thinking.
-          </p>
-          <p>
-            My work sits at the intersection of product building and problem solving — from creating backend systems for operations,
-            to building mobile apps, to integrating intelligent features that make software more helpful and efficient.
-          </p>
-          <p>
-            I enjoy turning ideas into polished, working systems with a strong focus on maintainability, user value, and real-world impact.
-          </p>
+    <section class="section story-section">
+      <div class="container">
+        <div class="story-card reveal">
+          <div class="story-header">
+            <div class="story-avatar" onclick="openImageModal(this)">
+              <img src="asset/about.png" alt="Israel Oyekanmi - Neetoosan" />
+            </div>
+            <div class="story-title-wrap">
+              <h2>My Story</h2>
+              <p class="story-subtitle">From curiosity to code • One bug at a time</p>
+            </div>
+          </div>
+          
+          <div class="story-content">
+            <p class="story-paragraph">
+              I'm <span class="story-highlight">Israel Oyekanmi</span>  a naturally curious creative who stumbled into code and never looked back. My journey started with a simple question: <em>"What's harder to understand than a lady?"</em> Someone said Python. I laughed, then I tried it. Turns out, they weren't entirely wrong but I was hooked. 🐍
+            </p>
+            
+            <div class="story-journey">
+              <span class="journey-step">🐍 Python</span>
+              <span class="journey-arrow">→</span>
+              <span class="journey-step">🎮 C++ Games</span>
+              <span class="journey-arrow">→</span>
+              <span class="journey-step">🖥️ PySide6</span>
+              <span class="journey-arrow">→</span>
+              <span class="journey-step">🚀 Flet</span>
+              <span class="journey-arrow">→</span>
+              <span class="journey-step">💰 Sold Apps</span>
+            </div>
+            
+            <p class="story-paragraph">
+              What began as curiosity quickly became obsession. I dove into Python, then wandered into game development with C++, only to discover I could build real desktop applications with it. That led me to <span class="story-highlight">PySide6</span>, where I started crafting tools that actually solved problems. But I wanted more I wanted my work to reach everywhere. That's when I found <span class="story-highlight">Flutter -> Flet</span>, and everything clicked. Cross-platform apps, one codebase, endless possibilities.
+            </p>
+            
+            <div class="story-quote">t
+              The road wasn't smooth. I pitched to schools, students, and organizations and heard "no" more times than I can count. The feedback was brutal, the rejections stung. But every "no" fueled me instead of breaking me.
+            </div>
+            
+            <p class="story-paragraph">
+              Eventually, I started selling my applications. Not because it was easy because I <strong>refused to quit</strong>. Today, I build software that works in the real world: backend systems that power operations, automation tools that save hours, and applications that make people's lives easier. I bring the same curiosity that got me started to every project always learning, always improving, always asking <span class="story-highlight">"what if?"</span>
+            </p>
+            
+            <div class="story-fun-fact">
+              <span class="fun-fact-icon">💡</span>
+              <p class="fun-fact-text">
+                <strong>Fun fact:</strong> I started coding because someone told me Python was "harder than understanding women." Challenge accepted. The jury's still out on which is actually harder. 😄
+              </p>
+            </div>
+          </div>
         </div>
 
         <aside class="skills-panel reveal">
@@ -134,6 +168,104 @@
         </div>
       </div>
     </section>
+
+    <section class="section alt-section beyond-code-section">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Beyond the Code</p>
+          <h2>When I'm not building software...</h2>
+          <p class="section-subtitle">Life outside the IDE where creativity meets reality</p>
+        </div>
+        
+        <div class="beyond-grid">
+          <!-- 3D & Animation Card -->
+          <article class="beyond-card reveal" data-hobby="3d">
+            <div class="beyond-card-header">
+              <div class="beyond-icon">🎨</div>
+              <div class="beyond-glow"></div>
+            </div>
+            <div class="beyond-card-content">
+              <h3>3D & Animation</h3>
+              <p class="beyond-desc">
+                I unwind with Blender 3D modeling, animating, and bringing ideas to life in three dimensions.
+                It started as a curiosity, became a hobby, and now it's my creative escape from debugging sessions.
+              </p>
+              <div class="beyond-tags">
+                <span class="beyond-tag">Blender</span>
+                <span class="beyond-tag">3D Modeling</span>
+                <span class="beyond-tag">Animation</span>
+              </div>
+            </div>
+            <div class="beyond-card-footer">
+              <span class="beyond-stat">🎯 Creative Outlet</span>
+            </div>
+          </article>
+
+          <!-- Stories Card -->
+          <article class="beyond-card reveal" data-hobby="stories">
+            <div class="beyond-card-header">
+              <div class="beyond-icon">📚</div>
+              <div class="beyond-glow"></div>
+            </div>
+            <div class="beyond-card-content">
+              <h3>Stories That Challenge</h3>
+              <p class="beyond-desc">
+                I'm a fan of psychological mysteries manhwas, anime, and anything that makes me question what's real.
+                There's something about unraveling complex narratives that mirrors the satisfaction of solving a tough coding problem.
+              </p>
+              <div class="beyond-tags">
+                <span class="beyond-tag">Psychological</span>
+                <span class="beyond-tag">Mystery</span>
+                <span class="beyond-tag">Manhwa</span>
+                <span class="beyond-tag">Anime</span>
+              </div>
+            </div>
+            <div class="beyond-card-footer">
+              <span class="beyond-stat">🧠 Mind Benders</span>
+            </div>
+          </article>
+
+          <!-- Movement Card -->
+          <article class="beyond-card reveal" data-hobby="movement">
+            <div class="beyond-card-header">
+              <div class="beyond-icon">🚴</div>
+              <div class="beyond-glow"></div>
+            </div>
+            <div class="beyond-card-content">
+              <h3>Movement & Creation</h3>
+              <p class="beyond-desc">
+                Cycling keeps me grounded, cooking keeps me experimenting, and anime keeps me inspired.
+                Balance matters and these moments away from the screen make me a better engineer when I return.
+              </p>
+              <div class="beyond-tags">
+                <span class="beyond-tag">Cycling</span>
+                <span class="beyond-tag">Cooking</span>
+                <span class="beyond-tag">Balance</span>
+              </div>
+            </div>
+            <div class="beyond-card-footer">
+              <span class="beyond-stat">⚡ Energy Refuel</span>
+            </div>
+          </article>
+        </div>
+
+        <!-- Fun Quote -->
+        <div class="beyond-quote reveal">
+          <blockquote>
+            "A well-balanced developer is a better developer. These hobbies aren't distractions — 
+            they're fuel for the creative fire."
+          </blockquote>
+          <div class="beyond-quote-author">— My personal philosophy</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+      <span class="modal-close">&times;</span>
+      <img class="modal-content" id="modalImage" />
+      <div class="modal-caption">Israel Oyekanmi — Software Engineer & Creative</div>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -151,5 +283,44 @@
 
   <script src="js/loader.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    // Image Modal Functions
+    function openImageModal(element) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      const img = element.querySelector('img');
+      
+      modal.style.display = 'flex';
+      modalImg.src = img.src;
+      modalImg.alt = img.alt;
+      
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+      
+      // Add animation class
+      setTimeout(() => {
+        modal.classList.add('modal-active');
+      }, 10);
+    }
+    
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      
+      modal.classList.remove('modal-active');
+      
+      // Wait for animation to finish before hiding
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 300);
+    }
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeImageModal();
+      }
+    });
+  </script>
 </body>
 </html>
