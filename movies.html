@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Movie Explorer - Curated movie recommendations and streaming picks from Neetoosan's entertainment hub." />
+  <title>Movies | Neetoosan</title>
+  <link rel="icon" type="image/png" href="asset/favicon.png" />
+  <link rel="apple-touch-icon" href="asset/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .movie-genre-nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .genre-btn {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--color-border, #e5e5e5);
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .genre-btn:hover,
+    .genre-btn.active {
+      border-color: var(--color-primary, #007bff);
+      background: var(--color-primary, #007bff);
+      color: white;
+    }
+
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .movie-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: #f9f9f9;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .movie-poster {
+      width: 100%;
+      height: 320px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .movie-info {
+      padding: 1.5rem;
+    }
+
+    .movie-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+    }
+
+    .movie-year {
+      font-size: 0.85rem;
+      color: #999;
+      margin-bottom: 0.75rem;
+    }
+
+    .movie-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .rating-stars {
+      color: #ffc107;
+      font-size: 0.9rem;
+    }
+
+    .rating-score {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .movie-description {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .movie-genre-tag {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-hero.movies-hero {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #999;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="nLoader" role="status" aria-label="Loading Movies">
+    <img class="nLoader__logo" src="asset/logo_concept.png" alt="Neetoosan N logo" />
+    <span class="nLoader__text">Movie Explorer</span>
+  </div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo" aria-label="Neetoosan home">
+        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
+        NEETOOSAN<span>.</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+      <nav class="site-nav" id="siteNav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero small movies-hero">
+      <div class="container">
+        <p class="eyebrow">Entertainment Hub</p>
+        <h1>🎬 Movie Explorer</h1>
+        <p>
+          Discover curated movie recommendations across genres. From psychological thrillers to epic adventures, find your next favorite film.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="movie-genre-nav">
+          <button class="genre-btn active" onclick="filterMovies('all')">All Movies</button>
+          <button class="genre-btn" onclick="filterMovies('thriller')">Thriller</button>
+          <button class="genre-btn" onclick="filterMovies('scifi')">Sci-Fi</button>
+          <button class="genre-btn" onclick="filterMovies('drama')">Drama</button>
+          <button class="genre-btn" onclick="filterMovies('mystery')">Mystery</button>
+          <button class="genre-btn" onclick="filterMovies('animation')">Animation</button>
+        </div>
+
+        <div class="movies-grid" id="moviesGrid">
+          <!-- Psychological Thrillers -->
+          <div class="movie-card" data-genre="thriller">
+            <div class="movie-poster">🎭</div>
+            <div class="movie-info">
+              <div class="movie-title">Inception</div>
+              <div class="movie-year">2010</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">9.3/10</span>
+              </div>
+              <p class="movie-description">A skilled thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.</p>
+              <div>
+                <span class="movie-genre-tag">Thriller</span>
+                <span class="movie-genre-tag">Sci-Fi</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="mystery">
+            <div class="movie-poster">🔍</div>
+            <div class="movie-info">
+              <div class="movie-title">Shutter Island</div>
+              <div class="movie-year">2010</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★☆</span>
+                <span class="rating-score">8.2/10</span>
+              </div>
+              <p class="movie-description">A U.S. Marshal investigates the disappearance of a murderer who escaped from a hospital for the criminally insane.</p>
+              <div>
+                <span class="movie-genre-tag">Mystery</span>
+                <span class="movie-genre-tag">Thriller</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="thriller">
+            <div class="movie-poster">🧠</div>
+            <div class="movie-info">
+              <div class="movie-title">Memento</div>
+              <div class="movie-year">2000</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">8.4/10</span>
+              </div>
+              <p class="movie-description">A man with short-term memory loss attempts to track down his wife's murderer using an intricate system of notes and tattoos.</p>
+              <div>
+                <span class="movie-genre-tag">Thriller</span>
+                <span class="movie-genre-tag">Mystery</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sci-Fi -->
+          <div class="movie-card" data-genre="scifi">
+            <div class="movie-poster">🚀</div>
+            <div class="movie-info">
+              <div class="movie-title">Interstellar</div>
+              <div class="movie-year">2014</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">8.6/10</span>
+              </div>
+              <p class="movie-description">A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.</p>
+              <div>
+                <span class="movie-genre-tag">Sci-Fi</span>
+                <span class="movie-genre-tag">Drama</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="scifi">
+            <div class="movie-poster">🔮</div>
+            <div class="movie-info">
+              <div class="movie-title">The Matrix</div>
+              <div class="movie-year">1999</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">8.7/10</span>
+              </div>
+              <p class="movie-description">A computer programmer discovers that reality as he knows it is a simulated world created by sentient machines.</p>
+              <div>
+                <span class="movie-genre-tag">Sci-Fi</span>
+                <span class="movie-genre-tag">Thriller</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drama -->
+          <div class="movie-card" data-genre="drama">
+            <div class="movie-poster">🎪</div>
+            <div class="movie-info">
+              <div class="movie-title">The Shawshank Redemption</div>
+              <div class="movie-year">1994</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">9.3/10</span>
+              </div>
+              <p class="movie-description">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
+              <div>
+                <span class="movie-genre-tag">Drama</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Animation -->
+          <div class="movie-card" data-genre="animation">
+            <div class="movie-poster">🎨</div>
+            <div class="movie-info">
+              <div class="movie-title">Spirited Away</div>
+              <div class="movie-year">2001</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">8.6/10</span>
+              </div>
+              <p class="movie-description">A young girl wanders into a world ruled by gods, witches, and spirits and attempts to survive and find a way home.</p>
+              <div>
+                <span class="movie-genre-tag">Animation</span>
+                <span class="movie-genre-tag">Fantasy</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="mystery">
+            <div class="movie-poster">❓</div>
+            <div class="movie-info">
+              <div class="movie-title">Parasite</div>
+              <div class="movie-year">2019</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">8.5/10</span>
+              </div>
+              <p class="movie-description">Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.</p>
+              <div>
+                <span class="movie-genre-tag">Mystery</span>
+                <span class="movie-genre-tag">Drama</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="thriller">
+            <div class="movie-poster">⚡</div>
+            <div class="movie-info">
+              <div class="movie-title">Se7en</div>
+              <div class="movie-year">1995</div>
+              <div class="movie-rating">
+                <span class="rating-stars">★★★★★</span>
+                <span class="rating-score">8.6/10</span>
+              </div>
+              <p class="movie-description">Two detectives hunt a serial killer who uses the seven deadly sins as his motives.</p>
+              <div>
+                <span class="movie-genre-tag">Thriller</span>
+                <span class="movie-genre-tag">Mystery</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-section">
+      <div class="container">
+        <div class="section-heading centered">
+          <p class="eyebrow">Pro Tip</p>
+          <h2>Movie Marathon Starter Pack</h2>
+          <p class="section-subtitle">When you're in a coding slump, take a break and watch something thought-provoking. Great ideas often come after stepping away from the screen.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <div class="footer-logo">
+        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
+        <span>From Isolation to Innovation<span>.</span></span>
+      </div>
+      <div>
+        <a href="https://github.com/neetoosan" target="_blank" rel="noopener">GitHub</a>
+        <a href="contact.html">Contact</a>
+        <a href="about.html">About</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/loader.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function filterMovies(genre) {
+      const cards = document.querySelectorAll('.movie-card');
+      const buttons = document.querySelectorAll('.genre-btn');
+
+      // Update active button
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Filter cards
+      cards.forEach(card => {
+        if (genre === 'all' || card.dataset.genre === genre) {
+          card.style.display = 'block';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+          }, 10);
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 300);
+        }
+      });
+    }
+
+    // Add smooth transitions
+    const style = document.createElement('style');
+    style.textContent = `
+      .movie-card {
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
