@@ -4,13 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Neetoosan - Software Engineer portfolio showcasing Python, Flutter, backend, cybersecurity, and AI-driven projects." />
-  <title>Neetoosan | Software Engineer</title>
+  <title>Neetoosan | System Interface</title>
   <link rel="icon" type="image/png" href="asset/favicon.png" />
   <link rel="apple-touch-icon" href="asset/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Terminal boot sequence on index */
+    .boot-sequence {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--accent);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .boot-line { opacity: 0; animation: bootReveal .3s ease forwards; }
+    @keyframes bootReveal { to { opacity: 1; } }
+    .boot-sequence .cursor { animation: blink 1s step-end infinite; }
+  </style>
 </head>
 <body>
   <!-- Loading Screen -->
@@ -18,6 +33,21 @@
     <img class="nLoader__logo" src="asset/logo_concept.png" alt="Neetoosan N logo" />
     <span class="nLoader__text">Neetoosan</span>
   </div>
+
+  <!-- HUD Overlay -->
+  <div class="hud-overlay" id="hudOverlay">
+    <div class="hud-bar">
+      <div class="hud-left">
+        <span class="blinking">● ONLINE</span>
+        <span>LVL 27</span>
+      </div>
+      <div class="hud-right">
+        <span id="hudPageName">SYS.INIT</span>
+        <span id="hudXp">XP: 0%</span>
+      </div>
+    </div>
+  </div>
+
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo" aria-label="Neetoosan home">
@@ -44,48 +74,47 @@
       </div>
 
       <div class="container sh-inner">
-
-        <!-- left column: story copy -->
+        <!-- Terminal Boot Sequence (Left) -->
         <div class="sh-copy">
-          <p class="sh-kicker sh-anim" style="--d:0s">From Isolation to Innovation</p>
+          <p class="sh-kicker sh-anim" style="--d:0s">System Access Granted</p>
 
-          <h1 class="sh-headline sh-anim" style="--d:0.15s">
-            Built in<br>
-            <span class="sh-accent">Silence</span>.
+          <h1 class="sh-headline sh-anim glitch-text" style="--d:0.15s" data-text="INITIALIZE">
+            Initialize.<br><span class="sh-accent">Neetoosan</span>.
           </h1>
 
           <p class="sh-tagline sh-anim" style="--d:0.3s">
-            In a world driven by noise,&nbsp;<strong>Neetoosan</strong> was built in silence<br>
-            long nights, deep focus, and unseen effort turned into real solutions.
+            Welcome, <strong>User</strong>. You are entering the personal system of Neetoosan.<br>
+            Proceed to explore my architecture, skills, and mission logs.
           </p>
 
-          <blockquote class="sh-quote sh-anim" style="--d:0.45s">
+          <blockquote class="sh-quote sh-anim glitch-text" style="--d:0.45s" data-text="ENTERING THE MATRIX">
             <span class="sh-quote-mark">"</span>
-            <span id="heroTypewriter">I build while the world sleeps.</span><span class="typewriter-cursor" aria-hidden="true"></span>
+            <span id="heroTypewriter">Entering the matrix...</span><span class="typewriter-cursor" aria-hidden="true"></span>
             <span class="sh-quote-mark">"</span>
           </blockquote>
 
           <div class="sh-pills sh-anim" style="--d:0.55s">
-            <span>Backend Systems</span>
-            <span>Mobile Apps</span>
-            <span>AI Solutions</span>
-            <span>Secure Architectures</span>
+            <span>&gt; Backend</span>
+            <span>&gt; Mobile</span>
+            <span>&gt; AI</span>
+            <span>&gt; Security</span>
           </div>
 
           <div class="sh-actions sh-anim" style="--d:0.65s">
-            <a class="btn btn-primary" href="projects.html">Explore My Work</a>
-            <a class="btn btn-secondary" href="contact.html">Hire Me</a>
+            <a class="btn btn-primary" href="about.html">&gt; Explore Profile</a>
+            <a class="btn btn-secondary" href="contact.html">&gt; Initiate Contact</a>
           </div>
 
           <div class="sh-links sh-anim" style="--d:0.75s">
-            <a href="https://github.com/neetoosan" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://www.linkedin.com/in/israel-oyekanmi-876148392/" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="mailto:tobimolla44@gmail.com">Email</a>
+            <a href="https://github.com/neetoosan" target="_blank" rel="noopener">[GitHub]</a>
+            <a href="https://www.linkedin.com/in/israel-oyekanmi-876148392/" target="_blank" rel="noopener">[LinkedIn]</a>
+            <a href="mailto:tobimolla44@gmail.com">[Email]</a>
           </div>
         </div>
 
-        <!-- right column: manifesto card -->
-        <aside class="sh-card sh-anim" style="--d:0.4s" aria-label="Neetoosan philosophy">
+        <!-- Manifesto Card (Right) -->
+        <aside class="sh-card sh-anim" style="--d:0.6s" aria-label="Neetoosan philosophy">
+          <div class="card-character-overlay character-leaning-overlay"><img src="asset/character_leaning.png" alt="3D Leaning character avatar" /></div>
           <div class="sh-card-glow" aria-hidden="true"></div>
 
           <div class="sh-card-top">
@@ -123,7 +152,6 @@
             Backend · Mobile · AI · Security
           </p>
         </aside>
-
       </div>
 
       <!-- bottom scroll cue -->
@@ -134,54 +162,33 @@
 
     <section class="section">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">What I Do</p>
-          <h2>Engineering with performance, clarity, and purpose.</h2>
+        <div class="section-heading centered">
+          <p class="eyebrow">Key Stats</p>
+          <h2>System Capabilities</h2>
         </div>
 
-        <div class="card-grid">
-          <article class="feature-card reveal">
-            <h3>Backend Engineering</h3>
-            <p>I build clean REST APIs, secure authentication flows, and scalable service architectures using Python tools like FastAPI, Flask, and SQLAlchemy.</p>
-          </article>
-          <article class="feature-card reveal">
-            <h3>Mobile Development</h3>
-            <p>I create modern mobile apps with Flutter and growing Android/Kotlin experience, with focus on usability, responsiveness, and maintainable code.</p>
-          </article>
-          <article class="feature-card reveal">
-            <h3>AI Integration</h3>
-            <p>I integrate AI-powered features into user workflows, from classification and insights to smarter app experiences and automation.</p>
-          </article>
-          <article class="feature-card reveal">
-            <h3>Cybersecurity Mindset</h3>
-            <p>I approach products with secure API design, OWASP awareness, automation, and practical security thinking built into development.</p>
-          </article>
+        <div class="stats-grid">
+          <div class="stat reveal">
+            <h3>4+</h3>
+            <p>Production Flutter apps</p>
+          </div>
+          <div class="stat reveal">
+            <h3>3000+</h3>
+            <p>Assets handled in a backend system</p>
+          </div>
+          <div class="stat reveal">
+            <h3>100+</h3>
+            <p>Weekly loan records processed</p>
+          </div>
+          <div class="stat reveal">
+            <h3>40%</h3>
+            <p>Manual tracking reduction achieved</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="section alt-section">
-      <div class="container stats-grid">
-        <div class="stat reveal">
-          <h3>4+</h3>
-          <p>Production Flutter apps</p>
-        </div>
-        <div class="stat reveal">
-          <h3>3000+</h3>
-          <p>Assets handled in a backend system</p>
-        </div>
-        <div class="stat reveal">
-          <h3>100+</h3>
-          <p>Weekly loan records processed</p>
-        </div>
-        <div class="stat reveal">
-          <h3>40%</h3>
-          <p>Manual tracking reduction achieved</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
       <div class="container split-section">
         <div>
           <p class="eyebrow">Featured Work</p>
@@ -190,9 +197,10 @@
             From asset and loan management systems to AI-assisted anonymous reporting tools and media-driven mobile products,
             I enjoy building solutions that connect technical depth with real user needs.
           </p>
-          <a class="btn btn-primary" href="projects.html">Explore My Work</a>
+          <a class="btn btn-primary" href="projects.html">&gt; Explore Missions</a>
         </div>
-        <div class="info-panel reveal">
+        <div class="info-panel reveal" style="position: relative; overflow: visible; transform-style: preserve-3d;">
+          <div class="card-character-overlay character-presenting-overlay"><img src="asset/character_presenting.png" alt="3D Presenting character avatar" /></div>
           <div class="info-item">
             <strong>Asset Management</strong>
             <span>Python GUI, PostgreSQL, SQLAlchemy</span>
@@ -225,5 +233,6 @@
 
   <script src="js/loader.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/game.js"></script>
 </body>
 </html>

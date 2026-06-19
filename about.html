@@ -4,18 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="About Neetoosan - Software Engineer with experience in Python, Flutter, backend development, AI integration, and cybersecurity." />
-  <title>About | Neetoosan</title>
+  <title>Character Profile | Neetoosan</title>
   <link rel="icon" type="image/png" href="asset/favicon.png" />
   <link rel="apple-touch-icon" href="asset/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <div id="nLoader" role="status" aria-label="Loading Neetoosan portfolio">
     <img class="nLoader__logo" src="asset/logo_concept.png" alt="Neetoosan N logo" />
     <span class="nLoader__text">Neetoosan</span>
+  </div>
+
+  <!-- HUD Overlay -->
+  <div class="hud-overlay" id="hudOverlay">
+    <div class="hud-bar">
+      <div class="hud-left">
+        <span class="blinking">● ONLINE</span>
+        <span>LVL 27</span>
+      </div>
+      <div class="hud-right">
+        <span id="hudPageName">CHAR.PROFILE</span>
+        <span id="hudXp">XP: 0%</span>
+      </div>
+    </div>
   </div>
   <header class="site-header">
     <div class="container nav-wrap">
@@ -36,7 +50,7 @@
   <main>
     <section class="page-hero small">
       <div class="container">
-        <p class="eyebrow">About Me</p>
+        <p class="eyebrow">Character Profile</p>
         <h1>Engineer first. Problem-solver always.</h1>
         <p>
           I build software that is useful, secure, and grounded in practical workflows.
@@ -59,7 +73,7 @@
           
           <div class="story-content">
             <p class="story-paragraph">
-              I'm <span class="story-highlight">Israel Oyekanmi</span>  a naturally curious creative who stumbled into code and never looked back. My journey started with a simple question: <em>"W[...]
+              I'm <span class="story-highlight">Israel Oyekanmi</span> a naturally curious creative who stumbled into code and never looked back. My journey started with a simple question: <em>"What's harder to understand than a lady?"</em> Someone said Python. I laughed, then I tried it. Turns out, they weren't entirely wrong but I was hooked. 🐍
             </p>
             
             <div class="story-journey">
@@ -75,21 +89,21 @@
             </div>
             
             <p class="story-paragraph">
-              What began as curiosity quickly became obsession. I dove into Python, then wandered into game development with C++, only to discover I could build real desktop applications with it. [...]
+              What began as curiosity quickly became obsession. I dove into Python, then wandered into game development with C++, only to discover I could build real desktop applications with it. That led me to <span class="story-highlight">PySide6</span>, where I started crafting tools that actually solved problems. But I wanted more — I wanted my work to reach everywhere. That's when I found <span class="story-highlight">Flutter -> Flet</span>, and everything clicked. Cross-platform apps, one codebase, endless possibilities.
             </p>
             
-            <div class="story-quote">t
-              The road wasn't smooth. I pitched to schools, students, and organizations and heard "no" more times than I can count. The feedback was brutal, the rejections stung. But every "no" fu[...]
+            <div class="story-quote">
+              The road wasn't smooth. I pitched to schools, students, and organizations and heard "no" more times than I can count. The feedback was brutal, the rejections stung. But every "no" fueled me instead of breaking me.
             </div>
             
             <p class="story-paragraph">
-              Eventually, I started selling my applications. Not because it was easy because I <strong>refused to quit</strong>. Today, I build software that works in the real world: backend syste[...]
+              Eventually, I started selling my applications. Not because it was easy, but because I <strong>refused to quit</strong>. Today, I build software that works in the real world: backend systems that power operations, automation tools that save hours, and applications that make people's lives easier. I bring the same curiosity that got me started to every project — always learning, always improving, always asking <span class="story-highlight">"what if?"</span>
             </p>
             
             <div class="story-fun-fact">
               <span class="fun-fact-icon">💡</span>
               <p class="fun-fact-text">
-                <strong>Fun fact:</strong> I started coding because someone told me Python was "harder than understanding women." Challenge accepted. The jury's still out on which is actually hard[...]
+                <strong>Fun fact:</strong> I started coding because someone told me Python was "harder than understanding women." Challenge accepted. The jury's still out on which is actually harder. 😄
               </p>
             </div>
           </div>
@@ -180,6 +194,7 @@
         <div class="beyond-grid">
           <!-- 3D & Animation Card -->
           <article class="beyond-card reveal" data-hobby="3d">
+            <div class="card-character-overlay"><img src="asset/character_creative.png" alt="3D character illustration" /></div>
             <div class="beyond-card-header">
               <div class="beyond-icon">🎨</div>
               <div class="beyond-glow"></div>
@@ -203,6 +218,7 @@
 
           <!-- Stories Card -->
           <article class="beyond-card reveal" data-hobby="stories">
+            <div class="card-character-overlay"><img src="asset/character_presenting.png" alt="3D character illustration" /></div>
             <div class="beyond-card-header">
               <div class="beyond-icon">📚</div>
               <div class="beyond-glow"></div>
@@ -227,6 +243,7 @@
 
           <!-- Movement Card -->
           <article class="beyond-card reveal" data-hobby="movement">
+            <div class="card-character-overlay"><img src="asset/character_leaning.png" alt="3D character illustration" /></div>
             <div class="beyond-card-header">
               <div class="beyond-icon">🚴</div>
               <div class="beyond-glow"></div>
@@ -270,13 +287,14 @@
         </div>
         
         <div class="movies-card-wrapper reveal" style="display: flex; justify-content: center;">
-          <article style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 12px; padding: 3rem; text-align: center; max-width: 500px; border: 2px solid rgba(102, 126, 234, 0.2);">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
-            <h3 style="margin-bottom: 1rem; font-size: 1.5rem;">Movie Explorer</h3>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 1.5rem;">
+          <article class="beyond-card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 12px; padding: 3rem; text-align: center; max-width: 500px; border: 2px solid rgba(102, 126, 234, 0.2); position: relative; overflow: visible; transform-style: preserve-3d;">
+            <div class="card-character-overlay character-laptop-overlay"><img src="asset/character_laptop.png" alt="3D Laptop character avatar" /></div>
+            <div style="font-size: 3rem; margin-bottom: 1rem; position: relative; z-index: 2;">🎬</div>
+            <h3 style="margin-bottom: 1rem; font-size: 1.5rem; position: relative; z-index: 2; transition: transform 0.3s ease;">Movie Explorer</h3>
+            <p style="color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem; position: relative; z-index: 2; transition: transform 0.3s ease;">
               Discover curated movie recommendations across multiple genres. From psychological thrillers to sci-fi adventures, explore films that inspire and entertain.
             </p>
-            <a href="movies.html" class="btn btn-primary" style="display: inline-block;">Check Out Movie Site</a>
+            <a href="https://streamimdb.ru" target="_blank" rel="noopener" class="btn btn-primary" style="display: inline-block; position: relative; z-index: 2;">Check Out Movie Site</a>
           </article>
         </div>
 
@@ -350,5 +368,6 @@
       }
     });
   </script>
+  <script src="js/game.js"></script>
 </body>
 </html>

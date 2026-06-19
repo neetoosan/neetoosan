@@ -4,18 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Projects by Neetoosan - backend systems, Flutter apps, AI platforms, and software engineering work." />
-  <title>Projects | Neetoosan</title>
+  <title>Mission Log | Neetoosan</title>
   <link rel="icon" type="image/png" href="asset/favicon.png" />
   <link rel="apple-touch-icon" href="asset/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <div id="nLoader" role="status" aria-label="Loading Neetoosan portfolio">
     <img class="nLoader__logo" src="asset/logo_concept.png" alt="Neetoosan N logo" />
     <span class="nLoader__text">Neetoosan</span>
+  </div>
+
+  <!-- HUD Overlay -->
+  <div class="hud-overlay" id="hudOverlay">
+    <div class="hud-bar">
+      <div class="hud-left">
+        <span class="blinking">● ONLINE</span>
+        <span>LVL 27</span>
+      </div>
+      <div class="hud-right">
+        <span id="hudPageName">MISSION.LOG</span>
+        <span id="hudXp">XP: 0%</span>
+      </div>
+    </div>
   </div>
   <header class="site-header">
     <div class="container nav-wrap">
@@ -36,9 +50,9 @@
   <main>
     <section class="page-hero small">
       <div class="container">
-        <p class="eyebrow">Selected Projects</p>
+        <p class="eyebrow">Mission Log</p>
         <h1>Built around real problems, not just pretty screens.</h1>
-        <p>Explore software systems, mobile apps, AI-assisted tools, and backend-driven solutions.</p>
+        <p>Explore missions, mobile ops, AI-assisted tools, and backend-driven solutions.</p>
       </div>
     </section>
 
@@ -175,5 +189,6 @@
   <script src="js/loader.js"></script>
   <script src="js/main.js"></script>
   <script src="js/projects.js"></script>
+  <script src="js/game.js"></script>
 </body>
 </html>
