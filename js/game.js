@@ -245,8 +245,24 @@
         showOnboarding(true);
       });
 
+      const terminalBtn = document.createElement('button');
+      terminalBtn.className = 'hud-btn';
+      terminalBtn.title = 'Toggle System Console';
+      terminalBtn.innerHTML = '📟';
+      terminalBtn.addEventListener('click', () => {
+        const termOverlay = document.getElementById('terminalOverlay');
+        if (termOverlay) {
+          if (termOverlay.classList.contains('active')) {
+            closeTerminal();
+          } else {
+            openTerminal();
+          }
+        }
+      });
+
       controls.appendChild(soundBtn);
       controls.appendChild(helpBtn);
+      controls.appendChild(terminalBtn);
       
       // Insert in HUD bar right segment
       const hudRight = document.querySelector('.hud-right');
