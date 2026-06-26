@@ -25,7 +25,8 @@
     xp: parseFloat(localStorage.getItem('n_xp')) || 0,
     muted: localStorage.getItem('n_muted') === 'true',
     tutorialPlayed: localStorage.getItem('n_tutorial_played') === 'true',
-    quests: JSON.parse(localStorage.getItem('n_quests')) || defaultQuests
+    quests: JSON.parse(localStorage.getItem('n_quests')) || defaultQuests,
+    theme: localStorage.getItem('n_theme') || 'cyber'
   };
 
   // Ensure state matches default updates if any
@@ -39,6 +40,7 @@
     localStorage.setItem('n_muted', state.muted);
     localStorage.setItem('n_tutorial_played', state.tutorialPlayed);
     localStorage.setItem('n_quests', JSON.stringify(state.quests));
+    localStorage.setItem('n_theme', state.theme);
   }
 
   // ── Audio Synthesizer (Web Audio API) ─────────
@@ -64,58 +66,114 @@
       const now = ctx.currentTime;
 
       if (type === 'click') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, now);
-        osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
-        gainNode.gain.setValueAtTime(0.04, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
-        osc.start(now);
-        osc.stop(now + 0.08);
+        const isRPG = document.body.classList.contains('theme-rpg');
+        if (isRPG) {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(150, now + 0.05);
+          gainNode.gain.setValueAtTime(0.025, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
+          gainNode.gain.setValueAtTime(0.04, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        }
       } 
       else if (type === 'quest') {
-        osc.type = 'triangle';
-        // Quest sound: chime arpeggio
-        osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-        osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
-        gainNode.gain.setValueAtTime(0.06, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
-        osc.start(now);
-        osc.stop(now + 0.55);
+        const isRPG = document.body.classList.contains('theme-rpg');
+        if (isRPG) {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
+          gainNode.gain.setValueAtTime(0.03, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+          osc.start(now);
+          osc.stop(now + 0.45);
+        } else {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+          gainNode.gain.setValueAtTime(0.06, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+          osc.start(now);
+          osc.stop(now + 0.55);
+        }
       }
       else if (type === 'level') {
-        // Level up sound: victory synth chord
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(261.63, now); // C4
-        osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.5);
-        gainNode.gain.setValueAtTime(0.04, now);
-        gainNode.gain.linearRampToValueAtTime(0.08, now + 0.2);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
-        osc.start(now);
-        osc.stop(now + 0.8);
+        const isRPG = document.body.classList.contains('theme-rpg');
+        if (isRPG) {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(261.63, now); // C4
+          osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.4);
+          gainNode.gain.setValueAtTime(0.03, now);
+          gainNode.gain.linearRampToValueAtTime(0.06, now + 0.15);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+          osc.start(now);
+          osc.stop(now + 0.65);
 
-        // Harmony oscillator
-        const osc2 = ctx.createOscillator();
-        const gainNode2 = ctx.createGain();
-        osc2.type = 'triangle';
-        osc2.frequency.setValueAtTime(329.63, now); // E4
-        osc2.frequency.exponentialRampToValueAtTime(1318.51, now + 0.5);
-        osc2.connect(gainNode2);
-        gainNode2.connect(ctx.destination);
-        gainNode2.gain.setValueAtTime(0.04, now);
-        gainNode2.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
-        osc2.start(now);
-        osc2.stop(now + 0.8);
+          const osc2 = ctx.createOscillator();
+          const gainNode2 = ctx.createGain();
+          osc2.type = 'square';
+          osc2.frequency.setValueAtTime(329.63, now); // E4
+          osc2.frequency.exponentialRampToValueAtTime(1318.51, now + 0.4);
+          osc2.connect(gainNode2);
+          gainNode2.connect(ctx.destination);
+          gainNode2.gain.setValueAtTime(0.02, now);
+          gainNode2.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+          osc2.start(now);
+          osc2.stop(now + 0.65);
+        } else {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(261.63, now); // C4
+          osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.5);
+          gainNode.gain.setValueAtTime(0.04, now);
+          gainNode.gain.linearRampToValueAtTime(0.08, now + 0.2);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+          osc.start(now);
+          osc.stop(now + 0.8);
+
+          const osc2 = ctx.createOscillator();
+          const gainNode2 = ctx.createGain();
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(329.63, now); // E4
+          osc2.frequency.exponentialRampToValueAtTime(1318.51, now + 0.5);
+          osc2.connect(gainNode2);
+          gainNode2.connect(ctx.destination);
+          gainNode2.gain.setValueAtTime(0.04, now);
+          gainNode2.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+          osc2.start(now);
+          osc2.stop(now + 0.8);
+        }
       }
       else if (type === 'boot') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.linearRampToValueAtTime(880, now + 0.45);
-        gainNode.gain.setValueAtTime(0.05, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
-        osc.start(now);
-        osc.stop(now + 0.5);
+        const isRPG = document.body.classList.contains('theme-rpg');
+        if (isRPG) {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(1046.50, now); // C6
+          osc.frequency.setValueAtTime(1318.51, now + 0.1); // E6
+          gainNode.gain.setValueAtTime(0.02, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        } else {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.linearRampToValueAtTime(880, now + 0.45);
+          gainNode.gain.setValueAtTime(0.05, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        }
       }
     } catch (e) {
       console.warn("Audio synthesis block: User interaction required or unsupported.", e);
@@ -357,8 +415,166 @@
     if (!state.tutorialPlayed || force) {
       setTimeout(() => {
         const modal = document.getElementById('onboardingModal');
-        if (modal) modal.classList.add('active');
+        if (modal) {
+          modal.classList.add('active');
+          const isRPG = document.body.classList.contains('theme-rpg');
+          updateOnboardingTheme(isRPG);
+        }
       }, 500);
+    }
+  }
+
+  function injectThemeToggle() {
+    const siteNav = document.getElementById('siteNav');
+    if (siteNav && !document.getElementById('themeToggleBtn')) {
+      const toggleBtn = document.createElement('button');
+      toggleBtn.id = 'themeToggleBtn';
+      toggleBtn.className = 'theme-toggle-btn';
+      
+      toggleBtn.innerHTML = state.theme === 'rpg' ? '💻 CYBER MODE' : '💀 RPG MODE';
+
+      toggleBtn.addEventListener('click', () => {
+        const isRPG = document.body.classList.toggle('theme-rpg');
+        state.theme = isRPG ? 'rpg' : 'cyber';
+        saveState();
+        toggleBtn.innerHTML = isRPG ? '💻 CYBER MODE' : '💀 RPG MODE';
+        
+        playSound('boot');
+        triggerToast('🔮 THEME INITIALIZED', `Switched layout model to: ${state.theme.toUpperCase()}`);
+        
+        applyThemeDOMAdjustments(isRPG);
+        updateOnboardingTheme(isRPG);
+      });
+
+      siteNav.appendChild(toggleBtn);
+    }
+  }
+
+  function applyThemeDOMAdjustments(isRPG) {
+    // 1. Hero Headline Title swap
+    const headline = document.querySelector('.sh-headline');
+    if (headline) {
+      if (isRPG) {
+        if (!headline.getAttribute('data-original-html')) {
+          headline.setAttribute('data-original-html', headline.innerHTML);
+        }
+        headline.innerHTML = `A Wild<br><span class="sh-accent">DEVELOPER</span><br>Appeared!`;
+        headline.setAttribute('data-text', 'A WILD DEVELOPER APPEARED!');
+      } else {
+        const original = headline.getAttribute('data-original-html');
+        if (original) headline.innerHTML = original;
+        headline.setAttribute('data-text', 'INITIALIZE');
+      }
+    }
+
+    // 2. Hero Kicker swap
+    const kicker = document.querySelector('.sh-kicker');
+    if (kicker) {
+      if (isRPG) {
+        if (!kicker.getAttribute('data-original-text')) {
+          kicker.setAttribute('data-original-text', kicker.textContent);
+        }
+        kicker.textContent = 'Encounter Active · Level 27';
+      } else {
+        const original = kicker.getAttribute('data-original-text');
+        if (original) kicker.textContent = original;
+      }
+    }
+
+    // 3. Battle menu / Philosophy header
+    const statusLabel = document.querySelector('.sh-status-label');
+    if (statusLabel) {
+      if (isRPG) {
+        if (!statusLabel.getAttribute('data-original-text')) {
+          statusLabel.setAttribute('data-original-text', statusLabel.textContent);
+        }
+        statusLabel.textContent = 'DEVELOPER BIO';
+      } else {
+        const original = statusLabel.getAttribute('data-original-text');
+        if (original) statusLabel.textContent = original;
+      }
+    }
+
+    const cardTitle = document.querySelector('.sh-card-title');
+    if (cardTitle) {
+      if (isRPG) {
+        if (!cardTitle.getAttribute('data-original-html')) {
+          cardTitle.setAttribute('data-original-html', cardTitle.innerHTML);
+        }
+        cardTitle.innerHTML = 'What will you do?';
+      } else {
+        const original = cardTitle.getAttribute('data-original-html');
+        if (original) cardTitle.innerHTML = original;
+      }
+    }
+
+    // 4. Replace HUD Page names
+    const pageNameEl = document.getElementById('hudPageName');
+    if (pageNameEl) {
+      if (isRPG) {
+        pageNameEl.textContent = `BATTLE: ${getPageId().toUpperCase()}`;
+      } else {
+        pageNameEl.textContent = `SYS.${getPageId().toUpperCase()}`;
+      }
+    }
+  }
+
+  function updateOnboardingTheme(isRPG) {
+    const onboardingH2 = document.querySelector('.onboarding-window h2');
+    const onboardingSubtitle = document.querySelector('.onboarding-subtitle');
+    const onboardingActions = document.querySelector('.onboarding-actions');
+    
+    if (!onboardingH2 || !onboardingActions) return;
+    
+    if (isRPG) {
+      onboardingH2.innerHTML = '◢ A WILD DEVELOPER APPEARED! ◣';
+      onboardingSubtitle.innerHTML = 'Game Version 27.6.0 · English Localization Patched';
+      
+      onboardingActions.innerHTML = `
+        <div class="rpg-battle-menu">
+          <button class="rpg-btn" data-action="fight">⚡ FIGHT</button>
+          <button class="rpg-btn" data-action="bag">🎒 BAG</button>
+          <button class="rpg-btn" data-action="pokemon">👾 POKÉMON</button>
+          <button class="rpg-btn" data-action="run">🏃 RUN</button>
+        </div>
+      `;
+      
+      onboardingActions.querySelectorAll('.rpg-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = e.currentTarget.getAttribute('data-action');
+          if (action === 'fight') {
+            state.tutorialPlayed = true;
+            saveState();
+            document.getElementById('onboardingModal').classList.remove('active');
+            playSound('boot');
+            triggerToast('⚔️ BATTLE START', 'Trainer Neetoosan challenges you! Find all logs.');
+          } else if (action === 'bag') {
+            window.location.href = 'projects.html';
+          } else if (action === 'pokemon') {
+            window.location.href = 'about.html';
+          } else if (action === 'run') {
+            document.getElementById('onboardingModal').classList.remove('active');
+            playSound('click');
+          }
+        });
+      });
+    } else {
+      onboardingH2.innerHTML = '◢ NEETOOSAN SYSTEM ONBOARDING ◣';
+      onboardingSubtitle.innerHTML = 'System Version 27.6.0 · Interactive Terminal Console Enabled';
+      onboardingActions.innerHTML = `
+        <button class="btn btn-primary" id="enterSystemBtn" style="padding: 1rem 3rem;">INITIALIZE SYSTEM ACCESS 🚀</button>
+      `;
+      
+      const enterBtn = document.getElementById('enterSystemBtn');
+      if (enterBtn) {
+        enterBtn.addEventListener('click', () => {
+          state.tutorialPlayed = true;
+          saveState();
+          document.getElementById('onboardingModal').classList.remove('active');
+          playSound('boot');
+          triggerToast('🚀 SYSTEM BOOT', 'Interface calibrated. Welcome aboard.');
+        });
+      }
     }
   }
 
@@ -584,7 +800,15 @@
 
   // ── Initialize Gamification ──────────────────
   document.addEventListener('DOMContentLoaded', () => {
+    const pageId = getPageId();
+    document.body.classList.add('page-' + pageId);
+
+    if (state.theme === 'rpg') {
+      document.body.classList.add('theme-rpg');
+    }
     injectElements();
+    injectThemeToggle();
+    applyThemeDOMAdjustments(state.theme === 'rpg');
     renderHUD();
     trackPageVisit();
     initHoloTilt();
