@@ -34,19 +34,6 @@
     <span class="nLoader__text">Neetoosan</span>
   </div>
 
-  <!-- HUD Overlay -->
-  <div class="hud-overlay" id="hudOverlay">
-    <div class="hud-bar">
-      <div class="hud-left">
-        <span class="blinking">● ONLINE</span>
-        <span>LVL 27</span>
-      </div>
-      <div class="hud-right">
-        <span id="hudPageName">SYS.INIT</span>
-        <span id="hudXp">XP: 0%</span>
-      </div>
-    </div>
-  </div>
 
   <header class="site-header">
     <div class="container nav-wrap">
@@ -95,9 +82,9 @@
 
           <div class="sh-pills sh-anim" style="--d:0.55s">
             <span>&gt; Backend</span>
-            <span>&gt; Mobile</span>
-            <span>&gt; AI</span>
-            <span>&gt; Security</span>
+            <span>&gt; Real-Time Gaming</span>
+            <span>&gt; 3D Animation &amp; Sculpting</span>
+            <span>&gt; Mobile Therapy &amp; AI</span>
           </div>
 
           <div class="sh-actions sh-anim" style="--d:0.65s">
@@ -191,13 +178,29 @@
     <section class="section alt-section">
       <div class="container split-section">
         <div>
-          <p class="eyebrow">Featured Work</p>
-          <h2>Projects that reflect my engineering style.</h2>
           <p>
-            From asset and loan management systems to AI-assisted anonymous reporting tools and media-driven mobile products,
-            I enjoy building solutions that connect technical depth with real user needs.
+            From competitive real-time skill matchmaking platforms (<strong>PlayBack</strong>) and binocular vision therapy tools (<strong>EyeBalance</strong>) to 3D character sculpting, AI reporting systems, and high-concurrency backends.
           </p>
           <a class="btn btn-primary" href="projects.html">&gt; Explore Missions</a>
+        </div>
+        <div class="info-panel reveal" style="position: relative; overflow: visible; transform-style: preserve-3d;">
+          <div class="card-character-overlay character-presenting-overlay"><img src="asset/character_presenting.png" alt="3D Presenting character avatar" /></div>
+          <div class="info-item">
+            <strong>PlayBack</strong>
+            <span>Real-time Matchmaking, Flame Engine, WebSockets</span>
+          </div>
+          <div class="info-item">
+            <strong>EyeBalance</strong>
+            <span>Binocular Vision Therapy, Overlays, Riverpod</span>
+          </div>
+          <div class="info-item">
+            <strong>3D Character Sculpting</strong>
+            <span>Blender 3D Modeling, Rigging &amp; Animation</span>
+          </div>
+          <div class="info-item">
+            <strong>Asset Management System</strong>
+            <span>Python GUI, PostgreSQL, SQLAlchemy</span>
+          </div>
         </div>
         <div class="info-panel reveal" style="position: relative; overflow: visible; transform-style: preserve-3d;">
           <div class="card-character-overlay character-presenting-overlay"><img src="asset/character_presenting.png" alt="3D Presenting character avatar" /></div>
@@ -231,6 +234,8 @@
     </div>
   </footer>
 
+  <script src="js/vendor/three.min.js"></script>
+  <script src="js/three-world.js"></script>
   <script src="js/loader.js"></script>
   <script src="js/main.js"></script>
   <script src="js/game.js"></script>

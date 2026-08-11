@@ -279,8 +279,8 @@
   // ── Document Dynamic Injection ───────────────
   function injectElements() {
     // 1. HUD Buttons (Sound toggle + Onboarding Replay)
-    const hudBar = document.querySelector('.hud-bar');
-    if (hudBar && !document.querySelector('.hud-controls')) {
+    const siteNav = document.getElementById('siteNav');
+    if (siteNav && !document.querySelector('.hud-controls')) {
       const controls = document.createElement('div');
       controls.className = 'hud-controls';
       
@@ -322,11 +322,7 @@
       controls.appendChild(helpBtn);
       controls.appendChild(terminalBtn);
       
-      // Insert in HUD bar right segment
-      const hudRight = document.querySelector('.hud-right');
-      if (hudRight) {
-        hudRight.insertBefore(controls, hudRight.firstChild);
-      }
+      siteNav.appendChild(controls);
     }
 
     // 2. Onboarding Modal Overlay
@@ -431,22 +427,63 @@
       toggleBtn.id = 'themeToggleBtn';
       toggleBtn.className = 'theme-toggle-btn';
       
-      toggleBtn.innerHTML = state.theme === 'rpg' ? '💻 CYBER MODE' : '💀 RPG MODE';
+      const getThemeLabel = (t) => {
+        if (t === 'rpg') return '💀 RPG MODE';
+        if (t === 'holodeck') return '🔮 HOLODECK';
+        return '💻 CYBER MODE';
+      };
+
+      toggleBtn.innerHTML = getThemeLabel(state.theme);
 
       toggleBtn.addEventListener('click', () => {
-        const isRPG = document.body.classList.toggle('theme-rpg');
-        state.theme = isRPG ? 'rpg' : 'cyber';
+        if (state.theme === 'cyber') state.theme = 'rpg';
+        else if (state.theme === 'rpg') state.theme = 'holodeck';
+        else state.theme = 'cyber';
+
         saveState();
-        toggleBtn.innerHTML = isRPG ? '💻 CYBER MODE' : '💀 RPG MODE';
+        toggleBtn.innerHTML = getThemeLabel(state.theme);
         
         playSound('boot');
-        triggerToast('🔮 THEME INITIALIZED', `Switched layout model to: ${state.theme.toUpperCase()}`);
+        triggerToast('🔮 THEME INITIALIZED', `Switched spatial theme to: ${state.theme.toUpperCase()}`);
         
-        applyThemeDOMAdjustments(isRPG);
-        updateOnboardingTheme(isRPG);
+        applyThemeDOMAdjustments(state.theme);
+        if (typeof window.set3DTheme === 'function') {
+          window.set3DTheme(state.theme);
+        }
       });
 
       siteNav.appendChild(toggleBtn);
+    }
+  }
+
+  function applyThemeDOMAdjustments(themeKey) {
+    document.body.classList.remove('theme-rpg', 'theme-holodeck');
+    if (themeKey === 'rpg') document.body.classList.add('theme-rpg');
+    if (themeKey === 'holodeck') document.body.classList.add('theme-holodeck');
+
+    const isRPG = themeKey === 'rpg';
+    const isHolo = themeKey === 'holodeck';
+
+    // Hero Headline Title swap
+    const headline = document.querySelector('.sh-headline');
+    if (headline) {
+      if (isRPG) {
+        if (!headline.getAttribute('data-original-html')) {
+          headline.setAttribute('data-original-html', headline.innerHTML);
+        }
+        headline.innerHTML = `A Wild<br><span class="sh-accent">DEVELOPER</span><br>Appeared!`;
+        headline.setAttribute('data-text', 'A WILD DEVELOPER APPEARED!');
+      } else if (isHolo) {
+        if (!headline.getAttribute('data-original-html')) {
+          headline.setAttribute('data-original-html', headline.innerHTML);
+        }
+        headline.innerHTML = `Quantum<br><span class="sh-accent">HOLODECK</span><br>Active.`;
+        headline.setAttribute('data-text', 'QUANTUM HOLODECK');
+      } else {
+        const original = headline.getAttribute('data-original-html');
+        if (original) headline.innerHTML = original;
+        headline.setAttribute('data-text', 'INITIALIZE');
+      }
     }
   }
 
@@ -803,12 +840,12 @@
     const pageId = getPageId();
     document.body.classList.add('page-' + pageId);
 
-    if (state.theme === 'rpg') {
-      document.body.classList.add('theme-rpg');
-    }
+    if (state.theme === 'rpg') document.body.classList.add('theme-rpg');
+    if (state.theme === 'holodeck') document.body.classList.add('theme-holodeck');
+
     injectElements();
     injectThemeToggle();
-    applyThemeDOMAdjustments(state.theme === 'rpg');
+    applyThemeDOMAdjustments(state.theme);
     renderHUD();
     trackPageVisit();
     initHoloTilt();
@@ -818,5 +855,8 @@
 
     console.log('%c[SYSTEM] Gamified System Engine calibrated and active.', 'color: #00ff9d;');
   });
+  // Expose global helpers for 3D engine integration
+  window.playSound = playSound;
+  window.addXp = addXP;
 
 })();

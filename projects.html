@@ -18,19 +18,6 @@
     <span class="nLoader__text">Neetoosan</span>
   </div>
 
-  <!-- HUD Overlay -->
-  <div class="hud-overlay" id="hudOverlay">
-    <div class="hud-bar">
-      <div class="hud-left">
-        <span class="blinking">● ONLINE</span>
-        <span>LVL 27</span>
-      </div>
-      <div class="hud-right">
-        <span id="hudPageName">MISSION.LOG</span>
-        <span id="hudXp">XP: 0%</span>
-      </div>
-    </div>
-  </div>
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo" aria-label="Neetoosan home">
@@ -59,13 +46,69 @@
     <section class="section">
       <div class="container filter-row">
         <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="mobile">Mobile & Gaming</button>
+        <button class="filter-btn" data-filter="3d">3D & Animation</button>
         <button class="filter-btn" data-filter="backend">Backend</button>
-        <button class="filter-btn" data-filter="mobile">Mobile</button>
         <button class="filter-btn" data-filter="ai">AI</button>
         <button class="filter-btn" data-filter="security">Security</button>
-      </div>
 
       <div class="container projects-grid" id="projectsGrid">
+        <article class="project-card reveal" data-category="mobile">
+          <div class="project-top">
+            <span class="project-badge">Real-Time Gaming</span>
+            <h3>PlayBack — Skill Matchmaking</h3>
+          </div>
+          <p>
+            A competitive head-to-head multiplayer skill gaming platform featuring real-time WebSockets matchmaking,
+            Flame game engine integration, Firebase auth, and Node.js backend infrastructure.
+          </p>
+          <div class="tag-list">
+            <span>Flutter</span>
+            <span>Flame Engine</span>
+            <span>WebSockets</span>
+            <span>Firebase</span>
+            <span>Node.js</span>
+            <span>Docker</span>
+          </div>
+          <a class="text-link" href="https://github.com/neetoosan" target="_blank" rel="noopener">View Project Architecture</a>
+        </article>
+
+        <article class="project-card reveal" data-category="mobile">
+          <div class="project-top">
+            <span class="project-badge">Vision Therapy</span>
+            <h3>EyeBalance — Vision Training</h3>
+          </div>
+          <p>
+            A specialized binocular vision therapy application delivering anti-suppression game training, system-wide overlay windows, Riverpod state management, and membership subscription pipelines.
+          </p>
+          <div class="tag-list">
+            <span>Flutter</span>
+            <span>Riverpod</span>
+            <span>Android Overlays</span>
+            <span>Firestore</span>
+            <span>In-App Purchases</span>
+          </div>
+          <a class="text-link" href="https://github.com/neetoosan" target="_blank" rel="noopener">Explore Application Suite</a>
+        </article>
+
+        <article class="project-card reveal" data-category="3d">
+          <div class="project-top">
+            <span class="project-badge">3D & Animation</span>
+            <h3>Digital Sculpting & 3D Assets</h3>
+          </div>
+          <p>
+            High-poly digital character sculpting, hard-surface modeling, 3D asset rigging, procedural texturing, and keyframe 3D animation created in Blender for real-time engines and web experiences.
+          </p>
+          <div class="tag-list">
+            <span>Blender</span>
+            <span>Digital Sculpting</span>
+            <span>3D Modeling</span>
+            <span>Character Rigging</span>
+            <span>Animation</span>
+          </div>
+          <a class="text-link" href="about.html">View 3D Pipeline</a>
+        </article>
+
         <article class="project-card reveal" data-category="backend security">
           <div class="project-top">
             <span class="project-badge">Backend</span>
@@ -186,6 +229,8 @@
     </div>
   </footer>
 
+  <script src="js/vendor/three.min.js"></script>
+  <script src="js/three-world.js"></script>
   <script src="js/loader.js"></script>
   <script src="js/main.js"></script>
   <script src="js/projects.js"></script>
