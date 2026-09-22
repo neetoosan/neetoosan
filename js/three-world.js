@@ -66,6 +66,7 @@
   
   // Materials & Meshes
   let clayMaterial, wireframeMaterial, accentWireMaterial, floorMaterial;
+  let gltfLoader;
   const propGroups = [];
   let floorGrid, ceilingGrid;
   let ambientLight, rimLight, keyLight, stationPointLight;
@@ -123,6 +124,9 @@
 
     // 5. Materials
     createMaterials();
+
+    // 5b. GLTF Loader for CC0 low-poly tech/game props (Kenney.nl)
+    gltfLoader = new THREE.GLTFLoader();
 
     // 6. Environment Grids & Plinths
     createEnvironment();
@@ -224,6 +228,55 @@
     scene.add(particles);
   }
 
+  // Loads a CC0 low-poly GLB prop (Kenney.nl), normalizes its scale to
+  // targetSize on its longest axis, centers it at `position` within the
+  // parent group, and applies the studio clay/wireframe materials so it
+  // matches the rest of the scene regardless of the source model's textures.
+  function loadPropModel(url, targetGroup, opts) {
+    const {
+      targetSize = 1.6,
+      position = { x: 0, y: 0.6, z: 0 },
+      rotY = 0,
+      rotSpeedY = 0.01,
+      rotSpeedX = 0
+    } = opts || {};
+
+    gltfLoader.load(url, (gltf) => {
+      const root = gltf.scene;
+
+      const box = new THREE.Box3().setFromObject(root);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      root.scale.setScalar(targetSize / maxDim);
+      root.rotation.y = rotY;
+
+      // Kenney's exported props often keep their offset from the original
+      // shared scene/grid layout instead of being re-centered on their own
+      // local origin. Re-center `root` inside a `pivot` wrapper so that the
+      // pivot's own origin -- the point animate() spins around every frame
+      // -- lands exactly on the mesh's visual center, not off to one side.
+      const box2 = new THREE.Box3().setFromObject(root);
+      const center = new THREE.Vector3();
+      box2.getCenter(center);
+      root.position.set(-center.x, -center.y, -center.z);
+
+      root.traverse((child) => {
+        if (child.isMesh) {
+          child.material = isWireframeMode ? wireframeMaterial : clayMaterial;
+        }
+      });
+
+      const pivot = new THREE.Group();
+      pivot.position.set(position.x, position.y, position.z);
+      pivot.userData = { rotSpeedY, rotSpeedX };
+      pivot.add(root);
+      targetGroup.add(pivot);
+    }, undefined, (err) => {
+      console.warn('[ThreeWorld] failed to load prop model:', url, err);
+    });
+  }
+
   function createStationProps() {
     // ── Station 01: Hero Identity Plinth & Gyroscope Core ──
     const group01 = new THREE.Group();
@@ -235,12 +288,22 @@
     baseMesh.position.y = -1.0;
     group01.add(baseMesh);
 
-    // Central Multi-faceted 3D Monolith
-    const polyGeo = new THREE.IcosahedronGeometry(1.1, 1);
-    const polyMesh = new THREE.Mesh(polyGeo, clayMaterial);
-    polyMesh.position.y = 0.6;
-    polyMesh.userData = { rotSpeedY: 0.008, rotSpeedX: 0.004 };
-    group01.add(polyMesh);
+    // Hero Prop: sleek sci-fi speeder craft
+    loadPropModel('asset/models/speeder.glb', group01, {
+      targetSize: 1.9,
+      position: { x: 0, y: 0.6, z: 0 },
+      rotY: Math.PI * 0.15,
+      rotSpeedY: 0.008
+    });
+
+    // Transmission Beacon: satellite dish sharing this spatial area,
+    // framed prominently when the camera drops low for Station 05
+    loadPropModel('asset/models/satellite-dish.glb', group01, {
+      targetSize: 1.3,
+      position: { x: 0.9, y: 1.6, z: -0.6 },
+      rotY: -0.5,
+      rotSpeedY: 0.004
+    });
 
     // Orbital Gyroscope Rings
     const ring1Geo = new THREE.TorusGeometry(1.8, 0.02, 16, 64);
@@ -269,13 +332,25 @@
     propBaseMesh.position.y = -1.05;
     group02.add(propBaseMesh);
 
-    // Hard-Surface Weapon/Blade Concept Object
-    const bladeGeo = new THREE.ConeGeometry(0.8, 2.4, 4);
-    const bladeMesh = new THREE.Mesh(bladeGeo, clayMaterial);
-    bladeMesh.position.y = 0.7;
-    bladeMesh.rotation.z = Math.PI * 0.15;
-    bladeMesh.userData = { rotSpeedY: 0.015 };
-    group02.add(bladeMesh);
+    // Weapon loadout: blaster, ammo crate, grenade
+    loadPropModel('asset/models/blaster.glb', group02, {
+      targetSize: 1.7,
+      position: { x: -0.35, y: 0.7, z: 0.3 },
+      rotY: Math.PI * 0.15,
+      rotSpeedY: 0.015
+    });
+    loadPropModel('asset/models/crate.glb', group02, {
+      targetSize: 1.0,
+      position: { x: 0.7, y: 0.3, z: -0.4 },
+      rotY: 0.4,
+      rotSpeedY: 0.006
+    });
+    loadPropModel('asset/models/grenade.glb', group02, {
+      targetSize: 0.55,
+      position: { x: -0.2, y: 0.25, z: -0.7 },
+      rotY: 0.2,
+      rotSpeedY: 0.02
+    });
 
     // Cage Gizmo
     const cageGeo = new THREE.BoxGeometry(2.2, 2.2, 2.2);
@@ -295,14 +370,15 @@
     engBase.position.y = -1.05;
     group03.add(engBase);
 
-    // Nested Octahedron Core representing backend concurrency
-    const coreGeo = new THREE.OctahedronGeometry(1.2, 0);
-    const coreMesh = new THREE.Mesh(coreGeo, clayMaterial);
-    coreMesh.position.y = 0.6;
-    coreMesh.userData = { rotSpeedY: 0.01, rotSpeedZ: 0.008 };
-    group03.add(coreMesh);
+    // Mechanical turret representing backend systems/concurrency
+    loadPropModel('asset/models/turret.glb', group03, {
+      targetSize: 2.0,
+      position: { x: 0, y: 0.6, z: 0 },
+      rotY: 0,
+      rotSpeedY: 0.01
+    });
 
-    const outerCore = new THREE.Mesh(new THREE.OctahedronGeometry(1.7, 1), wireframeMaterial);
+    const outerCore = new THREE.Mesh(new THREE.OctahedronGeometry(1.5, 1), wireframeMaterial);
     outerCore.position.y = 0.6;
     outerCore.userData = { rotSpeedY: -0.007, rotSpeedX: 0.006 };
     group03.add(outerCore);
@@ -310,29 +386,27 @@
     scene.add(group03);
     propGroups.push(group03);
 
-    // ── Station 04: Matrix & Specs Floating Obelisk ──
+    // ── Station 04: About & My Story — Astronaut Figure ──
     const group04 = new THREE.Group();
     group04.position.set(0, 1.0, -9.5);
 
-    const obeliskGeo = new THREE.CylinderGeometry(0.3, 1.4, 3.8, 6);
-    const obeliskMesh = new THREE.Mesh(obeliskGeo, clayMaterial);
-    obeliskMesh.position.y = 0.8;
-    obeliskMesh.userData = { rotSpeedY: 0.006 };
-    group04.add(obeliskMesh);
+    // Personal story prop: astronaut figure (positioned so its world-space
+    // height matches the station's camera look-at target, camPos.y=0.8)
+    loadPropModel('asset/models/astronaut.glb', group04, {
+      targetSize: 2.3,
+      position: { x: 0, y: -0.2, z: 0 },
+      rotY: 0,
+      rotSpeedY: 0.006
+    });
 
     const obeliskRing = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.02, 16, 48), wireframeMaterial);
-    obeliskRing.position.y = 1.0;
+    obeliskRing.position.y = 0.0;
     obeliskRing.rotation.x = Math.PI / 2;
     obeliskRing.userData = { rotSpeedZ: 0.015 };
     group04.add(obeliskRing);
 
     scene.add(group04);
     propGroups.push(group04);
-
-    // ── Station 05: Transmission Beacon ──
-    const group05 = new THREE.Group();
-    group05.position.set(0, 0.3, 0);
-    // Shares proximity with 01 but camera drops low looking upwards
   }
 
   function setupEvents() {
@@ -402,7 +476,8 @@
       );
     }
 
-    // Rotate 3D props
+    // Rotate 3D props (direct children carry rotSpeed userData; loaded
+    // GLTF models rotate as a single unit via their wrapping root node)
     propGroups.forEach(group => {
       group.children.forEach(child => {
         if (child.userData.rotSpeedX) child.rotation.x += child.userData.rotSpeedX;
@@ -456,9 +531,10 @@
     setWireframeMode: function (enableWireframe) {
       isWireframeMode = enableWireframe;
 
-      // Swap materials across all prop meshes
+      // Swap materials across all prop meshes, including nested meshes
+      // inside loaded GLTF prop models
       propGroups.forEach(group => {
-        group.children.forEach(child => {
+        group.traverse(child => {
           if (child.isMesh && child.material !== accentWireMaterial) {
             child.material = isWireframeMode ? wireframeMaterial : clayMaterial;
           }
