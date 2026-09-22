@@ -3,241 +3,573 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Neetoosan - Software Engineer portfolio showcasing Python, Flutter, backend, cybersecurity, and AI-driven projects." />
-  <title>Neetoosan | System Interface</title>
+  <meta name="description" content="Neetoosan — Software Engineer & 3D Prop/Asset Artist. Minimalist black-and-white portfolio featuring interactive 3D spatial world, Instagram renders, and engineering systems." />
+  <meta name="google-site-verification" content="jtZn-OVnVurJu6HpZCWK9wECkN3kCTyDbnpj1rC1Q68" />
+  <title>Neetoosan | Software Engineer & 3D Prop Artist</title>
+  
   <link rel="icon" type="image/png" href="asset/favicon.png" />
   <link rel="apple-touch-icon" href="asset/favicon.png" />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/style.css" />
-  <style>
-    /* Terminal boot sequence on index */
-    .boot-sequence {
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--accent);
-      font-size: 0.85rem;
-      line-height: 1.8;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    .boot-line { opacity: 0; animation: bootReveal .3s ease forwards; }
-    @keyframes bootReveal { to { opacity: 1; } }
-    .boot-sequence .cursor { animation: blink 1s step-end infinite; }
-  </style>
 </head>
 <body>
-  <!-- Loading Screen -->
-  <div id="nLoader" role="status" aria-label="Loading Neetoosan portfolio">
-    <img class="nLoader__logo" src="asset/logo_concept.png" alt="Neetoosan N logo" />
-    <span class="nLoader__text">Neetoosan</span>
-  </div>
+  <!-- 3D Spatial Canvas -->
+  <canvas id="webgl-canvas" aria-label="Interactive 3D spatial world environment"></canvas>
 
+  <!-- WebGL Fallback -->
+  <div id="webgl-fallback" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#060606; z-index:0;" aria-hidden="true"></div>
 
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a href="index.html" class="logo" aria-label="Neetoosan home">
-        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
-        NEETOOSAN<span>.</span>
+  <!-- Top HUD Header -->
+  <header class="hud-header" role="banner">
+    <a href="#identity" class="hud-brand" id="hudBrandLink" aria-label="Neetoosan Home">
+      <img src="asset/logo_concept.png" alt="Neetoosan Logo" class="hud-logo-img" />
+      <span class="hud-brand-text">NEETOOSAN<span>.</span></span>
+    </a>
+
+    <div class="hud-station-indicator" id="hudStationLabel" aria-live="polite">
+      01 // IDENTITY
+    </div>
+
+    <div class="hud-actions">
+      <button type="button" class="btn-hud" id="toggleShadingBtn" aria-label="Toggle 3D Shading Mode between Clay and Wireframe" aria-pressed="false">
+        [ MODE // CLAY ]
+      </button>
+
+      <a href="https://www.instagram.com/neetoosan/" target="_blank" rel="noopener" class="btn-hud-icon" aria-label="Instagram Profile" title="Instagram @neetoosan">
+        IG
       </a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
-      <nav class="site-nav" id="siteNav">
-        <a href="index.html" class="active">Home</a>
-        <a href="about.html">About</a>
-        <a href="projects.html">Projects</a>
-        <a href="contact.html">Contact</a>
-      </nav>
+      <a href="https://github.com/neetoosan" target="_blank" rel="noopener" class="btn-hud-icon" aria-label="GitHub Profile" title="GitHub">
+        GH
+      </a>
+      <a href="https://www.linkedin.com/in/israel-oyekanmi-876148392/" target="_blank" rel="noopener" class="btn-hud-icon" aria-label="LinkedIn Profile" title="LinkedIn">
+        IN
+      </a>
     </div>
   </header>
 
-  <main>
-    <!-- ═══ STORY HERO ═══ -->
-    <section class="story-hero" id="hero">
-      <!-- animated background particles -->
-      <div class="sh-particles" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
+  <!-- Spatial Stations Overlay Viewport -->
+  <main class="spatial-viewport" id="spatialViewport" role="main">
 
-      <div class="container sh-inner">
-        <!-- Terminal Boot Sequence (Left) -->
-        <div class="sh-copy">
-          <p class="sh-kicker sh-anim" style="--d:0s">System Access Granted</p>
+    <!-- ═════ STATION 01: IDENTITY ═════ -->
+    <section class="station-panel is-active" id="station-identity" data-station-key="identity" aria-labelledby="identity-heading">
+      <div class="station-container">
+        <p class="station-kicker">STATION 01 // OVERVIEW</p>
+        <h1 class="station-title" id="identity-heading">
+          Israel Oyekanmi.<br>
+          <span style="color:#888;">Software Engineer × 3D Prop Artist.</span>
+        </h1>
+        <p class="station-subtitle">
+          Building high-concurrency backends, competitive real-time game architecture, and intricate hard-surface 3D game props &amp; assets.
+        </p>
 
-          <h1 class="sh-headline sh-anim glitch-text" style="--d:0.15s" data-text="INITIALIZE">
-            Initialize.<br><span class="sh-accent">Neetoosan</span>.
-          </h1>
-
-          <p class="sh-tagline sh-anim" style="--d:0.3s">
-            Welcome, <strong>User</strong>. You are entering the personal system of Neetoosan.<br>
-            Proceed to explore my architecture, skills, and mission logs.
-          </p>
-
-          <blockquote class="sh-quote sh-anim glitch-text" style="--d:0.45s" data-text="ENTERING THE MATRIX">
-            <span class="sh-quote-mark">"</span>
-            <span id="heroTypewriter">Entering the matrix...</span><span class="typewriter-cursor" aria-hidden="true"></span>
-            <span class="sh-quote-mark">"</span>
-          </blockquote>
-
-          <div class="sh-pills sh-anim" style="--d:0.55s">
-            <span>&gt; Backend</span>
-            <span>&gt; Real-Time Gaming</span>
-            <span>&gt; 3D Animation &amp; Sculpting</span>
-            <span>&gt; Mobile Therapy &amp; AI</span>
-          </div>
-
-          <div class="sh-actions sh-anim" style="--d:0.65s">
-            <a class="btn btn-primary" href="about.html">&gt; Explore Profile</a>
-            <a class="btn btn-secondary" href="contact.html">&gt; Initiate Contact</a>
-          </div>
-
-          <div class="sh-links sh-anim" style="--d:0.75s">
-            <a href="https://github.com/neetoosan" target="_blank" rel="noopener">[GitHub]</a>
-            <a href="https://www.linkedin.com/in/israel-oyekanmi-876148392/" target="_blank" rel="noopener">[LinkedIn]</a>
-            <a href="mailto:tobimolla44@gmail.com">[Email]</a>
-          </div>
-        </div>
-
-        <!-- Manifesto Card (Right) -->
-        <aside class="sh-card sh-anim" style="--d:0.6s" aria-label="Neetoosan philosophy">
-          <div class="card-character-overlay character-leaning-overlay"><img src="asset/character_leaning.png" alt="3D Leaning character avatar" /></div>
-          <div class="sh-card-glow" aria-hidden="true"></div>
-
-          <div class="sh-card-top">
-            <span class="sh-dot" aria-hidden="true"></span>
-            <span class="sh-status-label">Philosophy</span>
-          </div>
-
-          <h2 class="sh-card-title">This is not just a developer brand.<br>It is a mindset.</h2>
-
-          <ul class="sh-milestones">
-            <li>
-              <span class="sh-m-icon">↗</span>
+        <div class="identity-grid">
+          <!-- Profile Portrait Photo Card -->
+          <div class="profile-portrait-card">
+            <div class="profile-photo-wrapper">
+              <img src="asset/about.png" alt="Israel Oyekanmi — Neetoosan" class="profile-photo-img" />
+              <div class="profile-photo-badge">ISRAEL OYEKANMI // NEETOOSAN</div>
+            </div>
+            <div class="profile-meta-row">
               <div>
-                <strong>From staying inside</strong>
-                <span>to standing out</span>
+                <h2 class="profile-meta-name">Israel Oyekanmi</h2>
+                <span class="profile-meta-role">Engineer × 3D Prop Artist</span>
               </div>
-            </li>
-            <li>
-              <span class="sh-m-icon">↗</span>
-              <div>
-                <strong>From learning alone</strong>
-                <span>to building things that matter</span>
-              </div>
-            </li>
-            <li>
-              <span class="sh-m-icon">↗</span>
-              <div>
-                <strong>From isolation</strong>
-                <span>to innovation</span>
-              </div>
-            </li>
-          </ul>
-
-          <p class="sh-card-footer">
-            Backend · Mobile · AI · Security
-          </p>
-        </aside>
-      </div>
-
-      <!-- bottom scroll cue -->
-      <div class="sh-scroll-cue sh-anim" style="--d:1s" aria-hidden="true">
-        <span class="sh-scroll-line"></span>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-heading centered">
-          <p class="eyebrow">Key Stats</p>
-          <h2>System Capabilities</h2>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat reveal">
-            <h3>4+</h3>
-            <p>Production Flutter apps</p>
+              <span class="status-indicator-live">● ONLINE</span>
+            </div>
           </div>
-          <div class="stat reveal">
-            <h3>3000+</h3>
-            <p>Assets handled in a backend system</p>
+
+          <div class="glass-card">
+            <p class="station-kicker">MISSION PHILOSOPHY</p>
+            <blockquote class="identity-quote">
+              "From staying inside to standing out. From learning alone to building things that matter. From isolation to innovation."
+            </blockquote>
+
+            <div class="identity-badges">
+              <span class="badge-item">&gt; 3D Game Props</span>
+              <span class="badge-item">&gt; Hard-Surface Modeling</span>
+              <span class="badge-item">&gt; Real-Time Systems</span>
+              <span class="badge-item">&gt; Python &amp; PostgreSQL</span>
+              <span class="badge-item">&gt; Flutter &amp; Flame</span>
+            </div>
+
+            <div class="identity-actions">
+              <button type="button" class="btn-primary js-nav-to" data-target="props">
+                EXPLORE 3D PROPS ↗
+              </button>
+              <button type="button" class="btn-secondary js-nav-to" data-target="about">
+                READ MY STORY
+              </button>
+            </div>
           </div>
-          <div class="stat reveal">
-            <h3>100+</h3>
-            <p>Weekly loan records processed</p>
-          </div>
-          <div class="stat reveal">
-            <h3>40%</h3>
-            <p>Manual tracking reduction achieved</p>
+
+          <div class="stats-list">
+            <div class="stat-box">
+              <div class="stat-box-num">3D</div>
+              <div class="stat-box-label">Assets, Weapons &amp; Props modeled in Blender &amp; Sculpting workflows</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-num">4+</div>
+              <div class="stat-box-label">Production Flutter &amp; Python systems deployed</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-num">3000+</div>
+              <div class="stat-box-label">Database assets processed with automated backend pipelines</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-box-num">60 FPS</div>
+              <div class="stat-box-label">Real-time WebSocket &amp; Flame game loop performance</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section alt-section">
-      <div class="container split-section">
-        <div>
-          <p>
-            From competitive real-time skill matchmaking platforms (<strong>PlayBack</strong>) and binocular vision therapy tools (<strong>EyeBalance</strong>) to 3D character sculpting, AI reporting systems, and high-concurrency backends.
-          </p>
-          <a class="btn btn-primary" href="projects.html">&gt; Explore Missions</a>
+    <!-- ═════ STATION 02: 3D GAME PROPS & INSTAGRAM SHOWCASE ═════ -->
+    <section class="station-panel" id="station-props" data-station-key="props" aria-labelledby="props-heading">
+      <div class="station-container">
+        <p class="station-kicker">STATION 02 // 3D PROP GALLERY</p>
+        <h2 class="station-title" id="props-heading">3D Game Props &amp; Assets</h2>
+        <p class="station-subtitle">
+          Hard-surface weapons, sci-fi props, and stylized game assets. Curated directly from my Instagram render feed (<a href="https://www.instagram.com/neetoosan/" target="_blank" rel="noopener" style="color:#ffffff; text-decoration:underline;">@neetoosan</a>).
+        </p>
+
+        <!-- Instagram Profile Banner -->
+        <div class="instagram-profile-banner">
+          <div class="ig-banner-meta">
+            <div class="ig-banner-avatar">3D</div>
+            <div>
+              <div class="ig-banner-title">Neetoosan 3D Art Station</div>
+              <div class="ig-banner-handle">instagram.com/neetoosan</div>
+            </div>
+          </div>
+          <a href="https://www.instagram.com/neetoosan/" target="_blank" rel="noopener" class="btn-primary" style="padding:0.5rem 1.2rem; font-size:0.8rem;">
+            FOLLOW ON INSTAGRAM ↗
+          </a>
         </div>
-        <div class="info-panel reveal" style="position: relative; overflow: visible; transform-style: preserve-3d;">
-          <div class="card-character-overlay character-presenting-overlay"><img src="asset/character_presenting.png" alt="3D Presenting character avatar" /></div>
-          <div class="info-item">
-            <strong>PlayBack</strong>
-            <span>Real-time Matchmaking, Flame Engine, WebSockets</span>
+
+        <!-- Instagram Embed Grid (populated by js/instagram-showcase.js) -->
+        <div class="instagram-grid" id="instagram-grid">
+          <!-- Render Cards with Live Embeds dynamically loaded here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ STATION 03: SOFTWARE ENGINEERING ═════ -->
+    <section class="station-panel" id="station-projects" data-station-key="projects" aria-labelledby="projects-heading">
+      <div class="station-container">
+        <p class="station-kicker">STATION 03 // CODE &amp; ARCHITECTURE</p>
+        <h2 class="station-title" id="projects-heading">Engineering Systems</h2>
+        <p class="station-subtitle">
+          High-performance full-stack applications, real-time gaming backends, vision therapy tools, and secure AI reporting platforms.
+        </p>
+
+        <div class="projects-grid">
+          <!-- Project 1: PlayBack -->
+          <article class="project-card">
+            <div class="project-card__top">
+              <div class="project-card__meta">
+                <span>REAL-TIME GAMING</span>
+                <span>PRODUCTION</span>
+              </div>
+              <h3 class="project-card__name">PlayBack</h3>
+              <p class="project-card__desc">
+                Competitive real-time skill matchmaking platform. Features WebSocket state synchronization, responsive canvas controls, rating leaderboards, and instant player pairings under 100ms.
+              </p>
+            </div>
+            <div class="project-card__bottom">
+              <div class="project-card__pills">
+                <span class="tech-pill">Flame Engine</span>
+                <span class="tech-pill">WebSockets</span>
+                <span class="tech-pill">Flutter</span>
+                <span class="tech-pill">Node.js</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 2: EyeBalance -->
+          <article class="project-card">
+            <div class="project-card__top">
+              <div class="project-card__meta">
+                <span>HEALTH TECH / AI</span>
+                <span>MOBILE APP</span>
+              </div>
+              <h3 class="project-card__name">EyeBalance</h3>
+              <p class="project-card__desc">
+                Mobile vision therapy application designed for binocular balancing. Generates custom visual stimulus overlays and tracks eye convergence exercises with local state management.
+              </p>
+            </div>
+            <div class="project-card__bottom">
+              <div class="project-card__pills">
+                <span class="tech-pill">Flutter</span>
+                <span class="tech-pill">Riverpod</span>
+                <span class="tech-pill">Canvas Overlays</span>
+                <span class="tech-pill">Dart</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 3: AI SafeHub -->
+          <article class="project-card">
+            <div class="project-card__top">
+              <div class="project-card__meta">
+                <span>CYBERSECURITY</span>
+                <span>AI PLATFORM</span>
+              </div>
+              <h3 class="project-card__name">AI SafeHub</h3>
+              <p class="project-card__desc">
+                Anonymous whistleblowing and incident reporting platform with client-side zero-knowledge encryption, automated metadata scrubbing, and AI risk categorization.
+              </p>
+            </div>
+            <div class="project-card__bottom">
+              <div class="project-card__pills">
+                <span class="tech-pill">Python</span>
+                <span class="tech-pill">FastAPI</span>
+                <span class="tech-pill">AES-GCM</span>
+                <span class="tech-pill">PostgreSQL</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 4: Asset Management System -->
+          <article class="project-card">
+            <div class="project-card__top">
+              <div class="project-card__meta">
+                <span>ENTERPRISE BACKEND</span>
+                <span>DESKTOP GUI</span>
+              </div>
+              <h3 class="project-card__name">Asset Management System</h3>
+              <p class="project-card__desc">
+                Database-driven inventory and loan tracking application handling 3,000+ asset records with audit logs, multi-condition filtering, and automated report generation.
+              </p>
+            </div>
+            <div class="project-card__bottom">
+              <div class="project-card__pills">
+                <span class="tech-pill">Python GUI</span>
+                <span class="tech-pill">SQLAlchemy</span>
+                <span class="tech-pill">PostgreSQL</span>
+                <span class="tech-pill">ReportLab</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ STATION 04: ABOUT & MY STORY ═════ -->
+    <section class="station-panel" id="station-about" data-station-key="about" aria-labelledby="about-heading">
+      <div class="station-container">
+        <p class="station-kicker">STATION 04 // ABOUT &amp; MY STORY</p>
+        <h2 class="station-title" id="about-heading">Engineer First. Problem-Solver Always.</h2>
+        <p class="station-subtitle">
+          From curiosity to code • One bug at a time. The story of relentless persistence, real-world software, and 3D digital art.
+        </p>
+
+        <!-- Main Story Grid: Portrait + Journey on Left, Deep Narrative on Right -->
+        <div class="story-layout">
+          <!-- Left Column: Picture & Journey Pipeline -->
+          <div>
+            <div class="profile-portrait-card" style="margin-bottom:1.5rem;">
+              <div class="profile-photo-wrapper">
+                <img src="asset/about.png" alt="Israel Oyekanmi — Neetoosan" class="profile-photo-img" />
+                <div class="profile-photo-badge">ISRAEL OYEKANMI // NEETOOSAN</div>
+              </div>
+              <div class="profile-meta-row">
+                <div>
+                  <h3 class="profile-meta-name">Israel Oyekanmi</h3>
+                  <span class="profile-meta-role">Engineer &amp; 3D Prop Artist</span>
+                </div>
+                <span class="status-indicator-live">● ONLINE</span>
+              </div>
+            </div>
+
+            <!-- Evolution Journey Roadmap -->
+            <div class="glass-card" style="padding:1.4rem; margin-bottom:1.5rem;">
+              <p class="station-kicker" style="font-size:0.75rem;">THE EVOLUTION ROAD</p>
+              <div class="journey-pipeline">
+                <span class="journey-step">🐍 Python</span>
+                <span class="journey-arrow">→</span>
+                <span class="journey-step">🎮 C++ Games</span>
+                <span class="journey-arrow">→</span>
+                <span class="journey-step">🖥️ PySide6</span>
+                <span class="journey-arrow">→</span>
+                <span class="journey-step">🚀 Flutter</span>
+                <span class="journey-arrow">→</span>
+                <span class="journey-step">💰 Sold Apps</span>
+              </div>
+            </div>
+
+            <!-- Fun Fact Callout -->
+            <div class="fun-fact-box">
+              <span class="fun-fact-icon">💡</span>
+              <div class="fun-fact-text">
+                <strong style="color:#fff;">Fun Fact:</strong> I started coding because someone told me Python was <em>"harder than understanding women."</em> Challenge accepted. The jury's still out on which is actually harder. 😄
+              </div>
+            </div>
           </div>
-          <div class="info-item">
-            <strong>EyeBalance</strong>
-            <span>Binocular Vision Therapy, Overlays, Riverpod</span>
-          </div>
-          <div class="info-item">
-            <strong>3D Character Sculpting</strong>
-            <span>Blender 3D Modeling, Rigging &amp; Animation</span>
-          </div>
-          <div class="info-item">
-            <strong>Asset Management System</strong>
-            <span>Python GUI, PostgreSQL, SQLAlchemy</span>
+
+          <!-- Right Column: Narrative Story & Resilience -->
+          <div class="glass-card">
+            <p class="station-kicker">DETAILED PROFILE</p>
+            <h3 style="font-size:1.45rem; font-weight:700; margin-bottom:1.2rem; color:#fff;">
+              From Curiosity to Code • One Bug at a Time
+            </h3>
+
+            <p class="story-lead">
+              I’m <strong class="story-highlight">Israel Oyekanmi</strong>, also known as <strong>Neetoosan</strong> — a naturally curious creative who stumbled into code and never looked back. My journey started with a simple question: <em>"What's harder to understand than a lady?"</em> Someone said Python. I laughed, then I tried it. Turns out, they weren't entirely wrong but I was completely hooked. 🐍
+            </p>
+
+            <p class="story-text">
+              What began as curiosity quickly became an obsession. I dove into Python, then wandered into game development with C++, discovering the visceral thrill of real-time state synchronization, math, and interactive graphics. That led me to <strong class="story-highlight">PySide6</strong>, where I started crafting desktop tools that actually solved daily operational headaches. But I wanted my work to reach everywhere — which led me to <strong class="story-highlight">Flutter and Dart</strong>. Cross-platform apps, one elegant architecture, endless possibilities.
+            </p>
+
+            <div class="story-callout-quote">
+              "The road wasn't smooth. I pitched to schools, students, and organizations and heard 'no' more times than I can count. The feedback was brutal, the rejections stung. But every 'no' fueled me instead of breaking me."
+            </div>
+
+            <p class="story-text">
+              Eventually, I started selling my applications. Not because it was easy, but because I <strong>refused to quit</strong>. Today, I build software that performs in the real world: backend systems handling thousands of database records, competitive matchmaking platforms with sub-100ms player pairings, binocular vision therapy mobile apps, and anonymous AI reporting systems. I bring that same fierce curiosity to every project — always learning, always refining, always asking <strong class="story-highlight">"what if?"</strong>
+            </p>
+
+            <div class="identity-actions" style="margin-top:2rem;">
+              <button type="button" class="btn-primary js-nav-to" data-target="props">
+                EXPLORE 3D PROPS ↗
+              </button>
+              <button type="button" class="btn-secondary js-nav-to" data-target="contact">
+                INITIATE TRANSMISSION
+              </button>
+            </div>
           </div>
         </div>
-        <div class="info-panel reveal" style="position: relative; overflow: visible; transform-style: preserve-3d;">
-          <div class="card-character-overlay character-presenting-overlay"><img src="asset/character_presenting.png" alt="3D Presenting character avatar" /></div>
-          <div class="info-item">
-            <strong>Asset Management</strong>
-            <span>Python GUI, PostgreSQL, SQLAlchemy</span>
+
+        <!-- Beyond Code / Creative Outlets -->
+        <div class="beyond-code-section">
+          <p class="station-kicker">BEYOND CODE // CREATIVE FIRE</p>
+          <h3 style="font-size:1.5rem; font-weight:700; color:#fff; margin-bottom:0.6rem;">Creative Outlets &amp; Balance</h3>
+          
+          <div class="beyond-cards-grid">
+            <!-- 3D Art & Sculpting -->
+            <article class="beyond-card">
+              <div>
+                <div class="beyond-card-icon">🎨</div>
+                <h4 class="beyond-card-title">3D Animation &amp; Sculpting</h4>
+                <p class="beyond-desc">
+                  I design, sculpt, and animate in three dimensions using Blender. From digital character sculpting and high-poly prop creation to hard-surface modeling, rigging, and keyframe 3D animation, I bring visual depth and artistic precision to software engineering.
+                </p>
+              </div>
+              <div class="beyond-tags">
+                <span class="beyond-tag">Blender</span>
+                <span class="beyond-tag">Digital Sculpting</span>
+                <span class="beyond-tag">Hard-Surface</span>
+                <span class="beyond-tag">Rigging</span>
+                <span class="beyond-tag">Keyframe 3D</span>
+              </div>
+            </article>
+
+            <!-- Stories That Challenge -->
+            <article class="beyond-card">
+              <div>
+                <div class="beyond-card-icon">📚</div>
+                <h4 class="beyond-card-title">Stories That Challenge</h4>
+                <p class="beyond-desc">
+                  I'm a fan of psychological mysteries, manhwas, anime, and anything that makes you question what's real. Unraveling intricate narratives mirrors the deep satisfaction of solving complex architecture and debugging distributed systems.
+                </p>
+              </div>
+              <div class="beyond-tags">
+                <span class="beyond-tag">Psychological</span>
+                <span class="beyond-tag">Mystery</span>
+                <span class="beyond-tag">Manhwa</span>
+                <span class="beyond-tag">Anime</span>
+                <span class="beyond-tag">Narratives</span>
+              </div>
+            </article>
+
+            <!-- Movement & Balance -->
+            <article class="beyond-card">
+              <div>
+                <div class="beyond-card-icon">🚴</div>
+                <h4 class="beyond-card-title">Movement &amp; Creation</h4>
+                <p class="beyond-desc">
+                  Cycling keeps me grounded, cooking keeps me experimenting, and anime keeps me inspired. Balance matters, and these moments away from the screen make me a sharper, more resilient engineer when I return.
+                </p>
+              </div>
+              <div class="beyond-tags">
+                <span class="beyond-tag">Cycling</span>
+                <span class="beyond-tag">Cooking</span>
+                <span class="beyond-tag">Balance</span>
+                <span class="beyond-tag">Mindset</span>
+              </div>
+            </article>
           </div>
-          <div class="info-item">
-            <strong>AI SafeHub</strong>
-            <span>AI-assisted anonymous reporting platform</span>
+        </div>
+
+        <!-- Technical & 3D Capabilities Matrix -->
+        <p class="station-kicker" style="margin-top:2rem;">CAPABILITY MATRIX</p>
+        <h3 style="font-size:1.5rem; font-weight:700; color:#fff; margin-bottom:1.5rem;">Core Technical &amp; 3D Specifications</h3>
+
+        <div class="specs-grid">
+          <!-- 3D & Prop Art Capabilities -->
+          <div class="glass-card">
+            <h4 class="spec-category-title">3D Art &amp; Game Prop Pipeline</h4>
+            <ul class="skill-matrix-list">
+              <li class="skill-matrix-item">
+                <span class="skill-name">Hard-Surface Prop Modeling</span>
+                <span class="skill-level">Blender / Precision Topology</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">High-Poly Sculpting</span>
+                <span class="skill-level">Concept &amp; Organic Sculpting</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">UV Unwrapping &amp; Edge Flow</span>
+                <span class="skill-level">Clean Quads / Non-manifold clean</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">Lighting &amp; Studio Renders</span>
+                <span class="skill-level">Cycles / Eevee / Clay Studio</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">WebGL &amp; Real-Time 3D</span>
+                <span class="skill-level">Three.js / Shader Basics</span>
+              </li>
+            </ul>
           </div>
-          <div class="info-item">
-            <strong>PlaySphere</strong>
-            <span>Flutter app for streaming and monetization</span>
+
+          <!-- Software Engineering Stack -->
+          <div class="glass-card">
+            <h4 class="spec-category-title">Software Engineering Stack</h4>
+            <ul class="skill-matrix-list">
+              <li class="skill-matrix-item">
+                <span class="skill-name">Backend &amp; APIs</span>
+                <span class="skill-level">Python / FastAPI / Django / Flask</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">Databases</span>
+                <span class="skill-level">PostgreSQL / SQLAlchemy / Redis / MySQL</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">Mobile &amp; Gaming UI</span>
+                <span class="skill-level">Flutter / Flame / Riverpod / Dart</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">Real-Time Networking</span>
+                <span class="skill-level">WebSockets / Concurrency</span>
+              </li>
+              <li class="skill-matrix-item">
+                <span class="skill-name">DevOps &amp; Security</span>
+                <span class="skill-level">Docker / Linux / AES Zero-Knowledge</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════ STATION 05: TRANSMISSION & SOCIAL HUB ═════ -->
+    <section class="station-panel" id="station-contact" data-station-key="contact" aria-labelledby="contact-heading">
+      <div class="station-container">
+        <p class="station-kicker">STATION 05 // TRANSMISSION</p>
+        <h2 class="station-title" id="contact-heading">Connect &amp; Collaborate</h2>
+        <p class="station-subtitle">
+          Open for 3D asset commissions, game prop partnerships, and software engineering opportunities.
+        </p>
+
+        <div class="contact-grid">
+          <!-- Social Media Hub -->
+          <div class="social-links-panel">
+            <a href="https://www.instagram.com/neetoosan/" target="_blank" rel="noopener" class="social-link-row">
+              <span class="label">Instagram</span>
+              <span class="handle">@neetoosan ↗</span>
+            </a>
+            <a href="https://github.com/neetoosan" target="_blank" rel="noopener" class="social-link-row">
+              <span class="label">GitHub</span>
+              <span class="handle">github.com/neetoosan ↗</span>
+            </a>
+            <a href="https://www.linkedin.com/in/israel-oyekanmi-876148392/" target="_blank" rel="noopener" class="social-link-row">
+              <span class="label">LinkedIn</span>
+              <span class="handle">Israel Oyekanmi ↗</span>
+            </a>
+            <a href="mailto:tobimolla44@gmail.com" class="social-link-row">
+              <span class="label">Direct Email</span>
+              <span class="handle">tobimolla44@gmail.com ↗</span>
+            </a>
+          </div>
+
+          <!-- Direct Message Box -->
+          <div class="glass-card contact-form-box">
+            <p class="station-kicker">SEND DIRECT TRANSMISSION</p>
+            <form action="mailto:tobimolla44@gmail.com" method="POST" enctype="text/plain">
+              <div class="form-group" style="margin-bottom:1rem;">
+                <label for="senderName">YOUR IDENTITY / NAME</label>
+                <input type="text" id="senderName" name="name" class="form-input" placeholder="e.g. Commander / Lead Art Director" required />
+              </div>
+              <div class="form-group" style="margin-bottom:1rem;">
+                <label for="senderEmail">RETURN TRANSMISSION EMAIL</label>
+                <input type="email" id="senderEmail" name="email" class="form-input" placeholder="name@domain.com" required />
+              </div>
+              <div class="form-group" style="margin-bottom:1.4rem;">
+                <label for="senderMsg">BRIEF OR COMMISSION DETAILS</label>
+                <textarea id="senderMsg" name="message" rows="4" class="form-textarea" placeholder="Describe 3D game prop scope or engineering role..." required></textarea>
+              </div>
+              <button type="submit" class="btn-primary" style="width:100%;">
+                INITIATE TRANSMISSION ↗
+              </button>
+            </form>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-wrap">
-      <div class="footer-logo">
-        <img src="asset/logo_concept.png" alt="Neetoosan logo" />
-        <span>From Isolation to Innovation<span>.</span></span>
+  <!-- Bottom Spatial Navigation Dock -->
+  <nav class="spatial-dock" aria-label="3D Station Navigation">
+    <button type="button" class="dock-btn is-active js-station-btn" data-station="identity" id="btn-station-identity">
+      <span class="dock-num">01</span>
+      <span>IDENTITY</span>
+    </button>
+    <button type="button" class="dock-btn js-station-btn" data-station="props" id="btn-station-props">
+      <span class="dock-num">02</span>
+      <span>3D PROPS</span>
+    </button>
+    <button type="button" class="dock-btn js-station-btn" data-station="projects" id="btn-station-projects">
+      <span class="dock-num">03</span>
+      <span>CODE</span>
+    </button>
+    <button type="button" class="dock-btn js-station-btn" data-station="about" id="btn-station-about">
+      <span class="dock-num">04</span>
+      <span>ABOUT</span>
+    </button>
+    <button type="button" class="dock-btn js-station-btn" data-station="contact" id="btn-station-contact">
+      <span class="dock-num">05</span>
+      <span>TRANSMIT</span>
+    </button>
+  </nav>
+
+  <!-- Modal Lightbox for 3D Instagram Render Embeds -->
+  <div class="render-modal" id="renderModal" role="dialog" aria-modal="true" aria-label="3D Prop Render Inspector">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="modal-header-title">3D RENDER INSPECTOR // NEETOOSAN</span>
+        <button type="button" class="modal-close" aria-label="Close Inspector">✕</button>
       </div>
-      <div>
-        <a href="https://github.com/neetoosan" target="_blank" rel="noopener">GitHub</a>
-        <a href="contact.html">Contact</a>
+      <div class="modal-body">
+        <!-- Render embed and metadata dynamically inserted here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost-sm modal-nav-prev">← PREVIOUS</button>
+        <button type="button" class="btn-ghost-sm modal-nav-next">NEXT →</button>
       </div>
     </div>
-  </footer>
+  </div>
 
+  <!-- Scripts -->
   <script src="js/vendor/three.min.js"></script>
   <script src="js/three-world.js"></script>
-  <script src="js/loader.js"></script>
+  <script src="js/instagram-showcase.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/game.js"></script>
 </body>
 </html>

@@ -1,710 +1,480 @@
 /**
  * ═════════════════════════════════════════════════════════════════════════════
- *   NEETOOSAN — 3D INTERACTIVE SPATIAL WORLD ENGINE (v2.0)
- *   Transforming portfolio navigation into an interactive 3D spatial flight 
- *   through layered scenes with distinct theme modes (CYBER, RPG, HOLODECK).
+ *   NEETOOSAN — 3D SPATIAL WORLD ENGINE (STUDIO MONOCHROME EDITION)
+ *   Minimal B&W spatial world navigation, studio darkroom lighting,
+ *   floating geometric prop plinths, and interactive clay/wireframe topology.
  * ═════════════════════════════════════════════════════════════════════════════
  */
 
 (function () {
   'use strict';
 
-  // ── Global & State Setup ────────────────────────────────────────────────
-  let scene, camera, renderer;
-  let canvasEl, tooltipEl, warpOverlayEl, sceneDockEl;
-  let groundGrid, ceilingGrid, particleSystem;
-  let ambientLight, pointLight1, pointLight2, pointLight3, dirLight;
-  let interactiveNodes = [];
-  let burstParticles = [];
-
-  // Theme Definitions
-  const THEMES = {
-    cyber: {
-      name: 'CYBER',
-      bg: 0x060913,
-      fog: 0x060913,
-      fogDensity: 0.0075,
-      gridPrimary: 0x00f3ff,
-      gridSecondary: 0x0c2540,
-      light1: 0x00f3ff,
-      light2: 0x00ff9d,
-      light3: 0xbd00ff,
-      particleColors: [0x00f3ff, 0x00ff9d, 0xbd00ff, 0xffffff],
-      nodeColors: [0x00f3ff, 0x00ff9d, 0xbd00ff, 0xff0055, 0xffb700, 0x00f3ff, 0x00ff9d, 0xff0055]
+  // ── Station Camera Configurations ──────────────────────────────────────────
+  const STATIONS = {
+    identity: {
+      id: 'identity',
+      index: 0,
+      name: '01 // IDENTITY',
+      camPos: { x: 0, y: 1.4, z: 8.2 },
+      targetPos: { x: 0, y: 0.2, z: 0 },
+      propPos: { x: 0, y: 0, z: 0 }
     },
-    rpg: {
-      name: 'RPG',
-      bg: 0x1a0505,
-      fog: 0x1a0505,
-      fogDensity: 0.0085,
-      gridPrimary: 0xe60045,
-      gridSecondary: 0x440810,
-      light1: 0xe60045,
-      light2: 0xffb700,
-      light3: 0xff0055,
-      particleColors: [0xe60045, 0xffb700, 0xff5500, 0xffffff],
-      nodeColors: [0xe60045, 0xffb700, 0xff0055, 0xe60045, 0xffb700, 0xff5500, 0xe60045, 0xffb700]
+    props: {
+      id: 'props',
+      index: 1,
+      name: '02 // 3D GAME PROPS',
+      camPos: { x: 8.5, y: 2.2, z: 6.0 },
+      targetPos: { x: 8.5, y: 0.6, z: -1.0 },
+      propPos: { x: 8.5, y: 0.4, z: -1.0 }
     },
-    holodeck: {
-      name: 'HOLODECK',
-      bg: 0x02151a,
-      fog: 0x02151a,
-      fogDensity: 0.007,
-      gridPrimary: 0x00ffaa,
-      gridSecondary: 0x043540,
-      light1: 0x00ffaa,
-      light2: 0x00e1ff,
-      light3: 0x7700ff,
-      particleColors: [0x00ffaa, 0x00e1ff, 0xffffff, 0x7700ff],
-      nodeColors: [0x00ffaa, 0x00e1ff, 0xffffff, 0x00ffaa, 0x00e1ff, 0x7700ff, 0x00ffaa, 0x00e1ff]
+    projects: {
+      id: 'projects',
+      index: 2,
+      name: '03 // ENGINEERING',
+      camPos: { x: -8.5, y: 2.0, z: 6.0 },
+      targetPos: { x: -8.5, y: 0.5, z: -1.0 },
+      propPos: { x: -8.5, y: 0.4, z: -1.0 }
+    },
+    about: {
+      id: 'about',
+      index: 3,
+      name: '04 // ABOUT & MY STORY',
+      camPos: { x: 0, y: 5.8, z: -3.5 },
+      targetPos: { x: 0, y: 0.8, z: -9.5 },
+      propPos: { x: 0, y: 1.0, z: -9.5 }
+    },
+    contact: {
+      id: 'contact',
+      index: 4,
+      name: '05 // TRANSMISSION',
+      camPos: { x: 0, y: -0.2, z: 6.5 },
+      targetPos: { x: 0, y: 0.4, z: 0 },
+      propPos: { x: 0, y: 0.3, z: 0 }
     }
   };
 
-  let currentThemeKey = localStorage.getItem('n_theme') || 'cyber';
-  if (!THEMES[currentThemeKey]) currentThemeKey = 'cyber';
+  // ── Engine State ───────────────────────────────────────────────────────────
+  let scene, camera, renderer;
+  let canvasEl;
+  let isWireframeMode = false;
+  let currentStationKey = 'identity';
+  
+  // Camera motion state
+  const camCurrent = { x: 0, y: 1.4, z: 8.2 };
+  const targetCurrent = { x: 0, y: 0.2, z: 0 };
+  const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+  
+  // Materials & Meshes
+  let clayMaterial, wireframeMaterial, accentWireMaterial, floorMaterial;
+  const propGroups = [];
+  let floorGrid, ceilingGrid;
+  let ambientLight, rimLight, keyLight, stationPointLight;
+  let animId = null;
+  let isRunning = true;
 
-  // Spatial Waypoints (Layered 3D Scenes in Space)
-  const SPATIAL_SCENES = [
-    { id: 'hero', name: '01 // SYS.INIT', pos: new THREE.Vector3(0, 0, 18), lookAt: new THREE.Vector3(0, 0, -10) },
-    { id: 'about', name: '02 // CHAR.PROFILE', pos: new THREE.Vector3(-8, 3, -25), lookAt: new THREE.Vector3(4, 0, -42) },
-    { id: 'stats', name: '03 // SYS.CAPABILITIES', pos: new THREE.Vector3(8, -2, -65), lookAt: new THREE.Vector3(-4, 0, -82) },
-    { id: 'projects', name: '04 // MISSION.LOG', pos: new THREE.Vector3(0, 5, -105), lookAt: new THREE.Vector3(0, -2, -125) },
-    { id: 'contact', name: '05 // SECURE.COMMS', pos: new THREE.Vector3(0, 0, -150), lookAt: new THREE.Vector3(0, 0, -170) }
-  ];
+  // Check WebGL availability
+  function isWebGLAvailable() {
+    try {
+      const canvas = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext && 
+        (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+    } catch (e) {
+      return false;
+    }
+  }
 
-  // Motion & Flight Engine State
-  const flightState = {
-    activeSceneIndex: 0,
-    targetCamPos: SPATIAL_SCENES[0].pos.clone(),
-    targetCamLook: SPATIAL_SCENES[0].lookAt.clone(),
-    currentCamPos: SPATIAL_SCENES[0].pos.clone(),
-    currentCamLook: SPATIAL_SCENES[0].lookAt.clone(),
-    mouseX: 0,
-    mouseY: 0,
-    mouseSwayX: 0,
-    mouseSwayY: 0,
-    isWarping: false,
-    scrollCooldown: false,
-    mode: 'glide'
-  };
-
-  const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent) || window.innerWidth < 768;
-
-  // Raycasting
-  const raycaster = new THREE.Raycaster();
-  const mouseVec = new THREE.Vector2(-999, -999);
-  let hoveredNode = null;
-
-  // Node Definitions
-  const nodeSpecs = [
-    { name: 'NODE_01: PLAYBACK_MATCHMAKER', type: 'Icosahedron', desc: 'Real-time Skill Matchmaking, Flame Engine & WebSockets', pos: [-14, 4, -10] },
-    { name: 'NODE_02: EYEBALANCE_VISION', type: 'TorusKnot', desc: 'Binocular Vision Therapy, Overlays & Riverpod', pos: [14, -3, -25] },
-    { name: 'NODE_03: BLENDER_SCULPT_3D', type: 'Dodecahedron', desc: 'High-poly Character Sculpting, Rigging & Animation', pos: [-16, 5, -45] },
-    { name: 'NODE_04: BACKEND_CORE', type: 'Icosahedron', desc: 'Python, FastAPI & PostgreSQL Architecture', pos: [15, 6, -65] },
-    { name: 'NODE_05: AI_SAFEHUB', type: 'Octahedron', desc: 'AI-assisted Anonymous Case Reporting Platform', pos: [-12, -5, -85] },
-    { name: 'NODE_06: CYBER_SECURITY', type: 'Tetrahedron', desc: 'Penetration Testing & Security Protocol', pos: [13, -4, -105] },
-    { name: 'NODE_07: PLAYSPHERE_MEDIA', type: 'Sphere', desc: 'Media Streaming & Monetization Infrastructure', pos: [-15, -2, -125] },
-    { name: 'NODE_08: ASSET_PIPELINES', type: 'Torus', desc: 'Production Asset Management Pipelines', pos: [12, 4, -145] }
-  ];
-
-  // ── Engine Initialization ──────────────────────────────────────────────
   function init() {
-    if (typeof THREE === 'undefined') {
-      setTimeout(init, 200);
+    canvasEl = document.getElementById('webgl-canvas');
+    if (!canvasEl) return;
+
+    if (!isWebGLAvailable()) {
+      showFallback();
       return;
     }
 
-    createDOMOverlayElements();
-    setupThreeScene();
-    buildCyberGrid();
-    buildParticleSystem();
-    buildInteractiveNodes();
-    setupEventListeners();
-    setupHUDControls();
-    init3DCardParallax();
-    apply3DTheme(currentThemeKey);
-
-    // Render loop
-    requestAnimationFrame(animate);
-    console.log('🚀 Neetoosan 3D Interactive Spatial Engine v2.0 Active');
-  }
-
-  // ── DOM Overlay Creation ───────────────────────────────────────────────
-  function createDOMOverlayElements() {
-    // 1. WebGL Canvas
-    canvasEl = document.getElementById('cyber3dCanvas');
-    if (!canvasEl) {
-      canvasEl = document.createElement('canvas');
-      canvasEl.id = 'cyber3dCanvas';
-      canvasEl.className = 'cyber-3d-canvas';
-      document.body.prepend(canvasEl);
-    }
-
-    // 2. Tooltip
-    tooltipEl = document.querySelector('.cyber-3d-tooltip');
-    if (!tooltipEl) {
-      tooltipEl = document.createElement('div');
-      tooltipEl.className = 'cyber-3d-tooltip';
-      tooltipEl.innerHTML = `
-        <div class="tooltip-header"><span class="tooltip-icon">◈</span> <span class="tooltip-title">SYSTEM NODE</span></div>
-        <div class="tooltip-status">Node Status: Online</div>
-      `;
-      document.body.appendChild(tooltipEl);
-    }
-
-    // 3. Warp Overlay
-    warpOverlayEl = document.querySelector('.warp-overlay');
-    if (!warpOverlayEl) {
-      warpOverlayEl = document.createElement('div');
-      warpOverlayEl.className = 'warp-overlay';
-      document.body.appendChild(warpOverlayEl);
-    }
-
-  }
-
-  // ── Scene Setup ────────────────────────────────────────────────────────
-  function setupThreeScene() {
+    // 1. Scene & Atmosphere
     scene = new THREE.Scene();
-    const t = THEMES[currentThemeKey];
-    scene.fog = new THREE.FogExp2(t.fog, t.fogDensity);
+    scene.background = new THREE.Color(0x060606);
+    scene.fog = new THREE.FogExp2(0x060606, 0.045);
 
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.copy(flightState.currentCamPos);
-    camera.lookAt(flightState.currentCamLook);
+    // 2. Camera Setup
+    const aspect = window.innerWidth / window.innerHeight;
+    camera = new THREE.PerspectiveCamera(48, aspect, 0.1, 100);
+    camera.position.set(camCurrent.x, camCurrent.y, camCurrent.z);
+    camera.lookAt(targetCurrent.x, targetCurrent.y, targetCurrent.z);
 
+    // 3. Renderer Setup
     renderer = new THREE.WebGLRenderer({
       canvas: canvasEl,
-      antialias: !isMobile,
-      alpha: true,
-      powerPreference: 'high-performance'
+      antialias: true,
+      powerPreference: 'high-performance',
+      alpha: false
     });
-
+    
+    // Performance: Clamp devicePixelRatio
+    const isMobile = window.innerWidth < 768;
+    renderer.setPixelRatio(isMobile ? 1.0 : Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
 
-    // Lights
-    ambientLight = new THREE.AmbientLight(t.light1, 0.45);
+    // 4. Lighting (Studio Darkroom Style)
+    setupStudioLighting();
+
+    // 5. Materials
+    createMaterials();
+
+    // 6. Environment Grids & Plinths
+    createEnvironment();
+
+    // 7. Spatial Station 3D Props/Plinths
+    createStationProps();
+
+    // 8. Event Listeners
+    setupEvents();
+
+    // 9. Start Loop
+    animate();
+  }
+
+  function setupStudioLighting() {
+    // Soft overhead ambient
+    ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
     scene.add(ambientLight);
 
-    dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
-    dirLight.position.set(10, 20, 15);
-    scene.add(dirLight);
+    // Sharp key light from top-front
+    keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    keyLight.position.set(5, 12, 8);
+    scene.add(keyLight);
 
-    pointLight1 = new THREE.PointLight(t.light1, 2.5, 90);
-    pointLight1.position.set(12, 10, -20);
-    scene.add(pointLight1);
+    // Rim / Back light for crisp specular edges
+    rimLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    rimLight.position.set(-6, 8, -8);
+    scene.add(rimLight);
 
-    pointLight2 = new THREE.PointLight(t.light2, 2.5, 90);
-    pointLight2.position.set(-12, -10, -60);
-    scene.add(pointLight2);
-
-    pointLight3 = new THREE.PointLight(t.light3, 2.0, 90);
-    pointLight3.position.set(0, 15, -110);
-    scene.add(pointLight3);
+    // Dynamic station focus spotlight
+    stationPointLight = new THREE.PointLight(0xffffff, 1.5, 20);
+    stationPointLight.position.set(0, 3, 0);
+    scene.add(stationPointLight);
   }
 
-  // ── Grid & Tunnel Construction ────────────────────────────────────────
-  function buildCyberGrid() {
-    const t = THEMES[currentThemeKey];
-    groundGrid = new THREE.GridHelper(260, 90, t.gridPrimary, t.gridSecondary);
-    groundGrid.position.set(0, -14, -60);
-    scene.add(groundGrid);
+  function createMaterials() {
+    // Smooth Matte Studio Clay Shading
+    clayMaterial = new THREE.MeshStandardMaterial({
+      color: 0xe0e0e0,
+      roughness: 0.65,
+      metalness: 0.08,
+      flatShading: false
+    });
 
-    ceilingGrid = new THREE.GridHelper(260, 90, t.gridPrimary, t.gridSecondary);
-    ceilingGrid.position.set(0, 16, -60);
-    scene.add(ceilingGrid);
-  }
+    // Darker pedestal material
+    const plinthMaterial = new THREE.MeshStandardMaterial({
+      color: 0x181818,
+      roughness: 0.9,
+      metalness: 0.2
+    });
 
-  // ── Starfield Particle System ──────────────────────────────────────────
-  function buildParticleSystem() {
-    const particleCount = isMobile ? 800 : 2200;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-
-    const t = THEMES[currentThemeKey];
-    const colorChoices = t.particleColors.map(hex => new THREE.Color(hex));
-
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 95;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 65;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 220 - 40;
-
-      const c = colorChoices[Math.floor(Math.random() * colorChoices.length)];
-      colors[i * 3] = c.r;
-      colors[i * 3 + 1] = c.g;
-      colors[i * 3 + 2] = c.b;
-    }
-
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d');
-    const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
-    grad.addColorStop(0, 'rgba(255,255,255,1)');
-    grad.addColorStop(0.4, 'rgba(0,243,255,0.8)');
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 32, 32);
-
-    const texture = new THREE.CanvasTexture(canvas);
-
-    const material = new THREE.PointsMaterial({
-      size: 1.25,
-      vertexColors: true,
-      map: texture,
+    // Crisp Topology Wireframe
+    wireframeMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      wireframe: true,
       transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false
+      opacity: 0.75
     });
 
-    particleSystem = new THREE.Points(geometry, material);
-    scene.add(particleSystem);
+    accentWireMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.35
+    });
   }
 
-  // ── Interactive Geometries ─────────────────────────────────────────────
-  function buildInteractiveNodes() {
-    interactiveNodes = [];
-    const t = THEMES[currentThemeKey];
+  function createEnvironment() {
+    // Studio Floor Grid
+    const gridSize = 80;
+    const gridDivisions = 80;
+    floorGrid = new THREE.GridHelper(gridSize, gridDivisions, 0x555555, 0x1c1c1c);
+    floorGrid.position.y = -1.2;
+    scene.add(floorGrid);
 
-    nodeSpecs.forEach((spec, idx) => {
-      let geo;
-      // Morph geometry based on Theme
-      if (currentThemeKey === 'rpg') {
-        // Polyhedral dice & RPG artifacts
-        switch (spec.type) {
-          case 'Icosahedron': geo = new THREE.IcosahedronGeometry(2.3, 0); break; // D20
-          case 'Dodecahedron': geo = new THREE.DodecahedronGeometry(2.3, 0); break; // D12
-          case 'Octahedron': geo = new THREE.OctahedronGeometry(2.4, 0); break; // D8
-          default: geo = new THREE.BoxGeometry(2.2, 2.2, 2.2); break; // RPG Chest/Cube
-        }
-      } else if (currentThemeKey === 'holodeck') {
-        // Holographic Glass Prisms & Crystals
-        switch (spec.type) {
-          case 'Sphere': geo = new THREE.IcosahedronGeometry(2.2, 2); break;
-          case 'TorusKnot': geo = new THREE.TorusGeometry(2.2, 0.4, 16, 32); break;
-          default: geo = new THREE.OctahedronGeometry(2.5, 0); break;
-        }
+    // Ceiling Subtle Echo Grid
+    ceilingGrid = new THREE.GridHelper(gridSize, 40, 0x333333, 0x121212);
+    ceilingGrid.position.y = 8.0;
+    scene.add(ceilingGrid);
+
+    // Background Dust / Floating Coordinates Particles
+    const particleCount = 180;
+    const particleGeo = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] = (Math.random() - 0.5) * 50;
+      positions[i + 1] = Math.random() * 12 - 1.2;
+      positions[i + 2] = (Math.random() - 0.5) * 50;
+    }
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    
+    const particleMat = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.06,
+      transparent: true,
+      opacity: 0.4
+    });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
+  }
+
+  function createStationProps() {
+    // ── Station 01: Hero Identity Plinth & Gyroscope Core ──
+    const group01 = new THREE.Group();
+    group01.position.set(0, 0, 0);
+
+    // Pedestal
+    const baseGeo = new THREE.CylinderGeometry(1.6, 1.8, 0.4, 32);
+    const baseMesh = new THREE.Mesh(baseGeo, clayMaterial);
+    baseMesh.position.y = -1.0;
+    group01.add(baseMesh);
+
+    // Central Multi-faceted 3D Monolith
+    const polyGeo = new THREE.IcosahedronGeometry(1.1, 1);
+    const polyMesh = new THREE.Mesh(polyGeo, clayMaterial);
+    polyMesh.position.y = 0.6;
+    polyMesh.userData = { rotSpeedY: 0.008, rotSpeedX: 0.004 };
+    group01.add(polyMesh);
+
+    // Orbital Gyroscope Rings
+    const ring1Geo = new THREE.TorusGeometry(1.8, 0.02, 16, 64);
+    const ring1 = new THREE.Mesh(ring1Geo, wireframeMaterial);
+    ring1.position.y = 0.6;
+    ring1.userData = { rotSpeedX: 0.012, rotSpeedY: 0.006 };
+    group01.add(ring1);
+
+    const ring2Geo = new THREE.TorusGeometry(2.2, 0.015, 16, 64);
+    const ring2 = new THREE.Mesh(ring2Geo, accentWireMaterial);
+    ring2.position.y = 0.6;
+    ring2.rotation.x = Math.PI / 3;
+    ring2.userData = { rotSpeedX: -0.008, rotSpeedZ: 0.01 };
+    group01.add(ring2);
+
+    scene.add(group01);
+    propGroups.push(group01);
+
+    // ── Station 02: 3D Game Props Showcase Plinth ──
+    const group02 = new THREE.Group();
+    group02.position.set(8.5, 0.4, -1.0);
+
+    // Pedestal
+    const propBaseGeo = new THREE.BoxGeometry(3.0, 0.3, 3.0);
+    const propBaseMesh = new THREE.Mesh(propBaseGeo, clayMaterial);
+    propBaseMesh.position.y = -1.05;
+    group02.add(propBaseMesh);
+
+    // Hard-Surface Weapon/Blade Concept Object
+    const bladeGeo = new THREE.ConeGeometry(0.8, 2.4, 4);
+    const bladeMesh = new THREE.Mesh(bladeGeo, clayMaterial);
+    bladeMesh.position.y = 0.7;
+    bladeMesh.rotation.z = Math.PI * 0.15;
+    bladeMesh.userData = { rotSpeedY: 0.015 };
+    group02.add(bladeMesh);
+
+    // Cage Gizmo
+    const cageGeo = new THREE.BoxGeometry(2.2, 2.2, 2.2);
+    const cageMesh = new THREE.Mesh(cageGeo, wireframeMaterial);
+    cageMesh.position.y = 0.7;
+    cageMesh.userData = { rotSpeedY: -0.005, rotSpeedX: 0.005 };
+    group02.add(cageMesh);
+
+    scene.add(group02);
+    propGroups.push(group02);
+
+    // ── Station 03: Engineering & Real-Time Matchmaking Plinth ──
+    const group03 = new THREE.Group();
+    group03.position.set(-8.5, 0.4, -1.0);
+
+    const engBase = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 2.0, 0.3, 8), clayMaterial);
+    engBase.position.y = -1.05;
+    group03.add(engBase);
+
+    // Nested Octahedron Core representing backend concurrency
+    const coreGeo = new THREE.OctahedronGeometry(1.2, 0);
+    const coreMesh = new THREE.Mesh(coreGeo, clayMaterial);
+    coreMesh.position.y = 0.6;
+    coreMesh.userData = { rotSpeedY: 0.01, rotSpeedZ: 0.008 };
+    group03.add(coreMesh);
+
+    const outerCore = new THREE.Mesh(new THREE.OctahedronGeometry(1.7, 1), wireframeMaterial);
+    outerCore.position.y = 0.6;
+    outerCore.userData = { rotSpeedY: -0.007, rotSpeedX: 0.006 };
+    group03.add(outerCore);
+
+    scene.add(group03);
+    propGroups.push(group03);
+
+    // ── Station 04: Matrix & Specs Floating Obelisk ──
+    const group04 = new THREE.Group();
+    group04.position.set(0, 1.0, -9.5);
+
+    const obeliskGeo = new THREE.CylinderGeometry(0.3, 1.4, 3.8, 6);
+    const obeliskMesh = new THREE.Mesh(obeliskGeo, clayMaterial);
+    obeliskMesh.position.y = 0.8;
+    obeliskMesh.userData = { rotSpeedY: 0.006 };
+    group04.add(obeliskMesh);
+
+    const obeliskRing = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.02, 16, 48), wireframeMaterial);
+    obeliskRing.position.y = 1.0;
+    obeliskRing.rotation.x = Math.PI / 2;
+    obeliskRing.userData = { rotSpeedZ: 0.015 };
+    group04.add(obeliskRing);
+
+    scene.add(group04);
+    propGroups.push(group04);
+
+    // ── Station 05: Transmission Beacon ──
+    const group05 = new THREE.Group();
+    group05.position.set(0, 0.3, 0);
+    // Shares proximity with 01 but camera drops low looking upwards
+  }
+
+  function setupEvents() {
+    window.addEventListener('resize', onWindowResize);
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouse.targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        isRunning = false;
       } else {
-        // Cyberpolyhedra
-        switch (spec.type) {
-          case 'Icosahedron': geo = new THREE.IcosahedronGeometry(2.2, 1); break;
-          case 'TorusKnot': geo = new THREE.TorusKnotGeometry(1.6, 0.4, 64, 16); break;
-          case 'Octahedron': geo = new THREE.OctahedronGeometry(2.4, 0); break;
-          case 'Dodecahedron': geo = new THREE.DodecahedronGeometry(2.2, 0); break;
-          case 'Sphere': geo = new THREE.SphereGeometry(2.0, 16, 16); break;
-          case 'Tetrahedron': geo = new THREE.TetrahedronGeometry(2.5, 0); break;
-          default: geo = new THREE.TorusGeometry(2.0, 0.5, 16, 32); break;
-        }
-      }
-
-      const nodeColor = t.nodeColors[idx % t.nodeColors.length];
-
-      const wireMat = new THREE.MeshStandardMaterial({
-        color: nodeColor,
-        wireframe: true,
-        emissive: nodeColor,
-        emissiveIntensity: 0.45,
-        roughness: 0.15,
-        metalness: 0.85
-      });
-
-      const mesh = new THREE.Mesh(geo, wireMat);
-      mesh.position.set(...spec.pos);
-
-      // Inner Core
-      const coreGeo = new THREE.SphereGeometry(1.0, 12, 12);
-      const coreMat = new THREE.MeshBasicMaterial({ color: nodeColor, transparent: true, opacity: 0.6 });
-      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-      mesh.add(coreMesh);
-
-      // Orbit Ring
-      const ringGeo = new THREE.RingGeometry(2.8, 2.95, 32);
-      const ringMat = new THREE.MeshBasicMaterial({ color: nodeColor, side: THREE.DoubleSide, transparent: true, opacity: 0.35 });
-      const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-      ringMesh.rotation.x = Math.PI / 3;
-      mesh.add(ringMesh);
-
-      mesh.userData = {
-        name: spec.name,
-        type: spec.type,
-        desc: spec.desc,
-        baseColor: nodeColor,
-        rotSpeedX: (Math.random() - 0.5) * 0.015 + 0.006,
-        rotSpeedY: (Math.random() - 0.5) * 0.015 + 0.009,
-        wireMat: wireMat
-      };
-
-      scene.add(mesh);
-      interactiveNodes.push(mesh);
-    });
-  }
-
-  // ── Dynamic Theme Switching Engine ─────────────────────────────────────
-  function apply3DTheme(themeKey) {
-    if (!THEMES[themeKey]) themeKey = 'cyber';
-    currentThemeKey = themeKey;
-
-    const t = THEMES[themeKey];
-
-    // 1. Fog & Scene Background
-    if (scene) {
-      scene.fog.color.setHex(t.fog);
-      scene.fog.density = t.fogDensity;
-    }
-
-    // 2. Lights
-    if (ambientLight) ambientLight.color.setHex(t.light1);
-    if (pointLight1) pointLight1.color.setHex(t.light1);
-    if (pointLight2) pointLight2.color.setHex(t.light2);
-    if (pointLight3) pointLight3.color.setHex(t.light3);
-
-    // 3. Grid Colors
-    if (groundGrid && ceilingGrid) {
-      scene.remove(groundGrid);
-      scene.remove(ceilingGrid);
-      buildCyberGrid();
-    }
-
-    // 4. Particle System Colors
-    if (particleSystem) {
-      scene.remove(particleSystem);
-      buildParticleSystem();
-    }
-
-    // 5. Rebuild Nodes with Theme Specific Geometry & Palette
-    if (interactiveNodes.length > 0) {
-      interactiveNodes.forEach(node => scene.remove(node));
-      buildInteractiveNodes();
-    }
-
-    console.log(`🎨 3D Engine Theme Applied: ${t.name}`);
-  }
-
-  // Expose global setter for theme toggle
-  window.set3DTheme = function (themeKey) {
-    apply3DTheme(themeKey);
-  };
-
-  // ── 3D Spatial Scene Navigation ────────────────────────────────────────
-  function jumpToSpatialScene(sceneIdx) {
-    if (sceneIdx < 0 || sceneIdx >= SPATIAL_SCENES.length) return;
-
-    flightState.activeSceneIndex = sceneIdx;
-    const targetScene = SPATIAL_SCENES[sceneIdx];
-
-    flightState.targetCamPos.copy(targetScene.pos);
-    flightState.targetCamLook.copy(targetScene.lookAt);
-
-    // Update Dock Active Class
-
-    // Scroll DOM to section smoothly
-    const sectionEl = document.getElementById(targetScene.id);
-    if (sectionEl) {
-      sectionEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }
-
-  // ── Tab Switch Warp Light Effect (Only on Tab/Page Switch) ──────────────
-  function triggerTabWarpEffect(targetUrl) {
-    if (flightState.isWarping) return;
-    flightState.isWarping = true;
-
-    // Light flash overlay ONLY when switching tabs
-    if (warpOverlayEl) {
-      warpOverlayEl.classList.add('active');
-    }
-
-    if (typeof window.playSound === 'function') {
-      window.playSound('quest');
-    }
-
-    setTimeout(() => {
-      window.location.href = targetUrl;
-    }, 380);
-  }
-
-  // ── Event Handlers ─────────────────────────────────────────────────────
-  function setupEventListeners() {
-    window.addEventListener('resize', onWindowResize, false);
-    window.addEventListener('mousemove', onPointerMove, false);
-    window.addEventListener('wheel', onWheelFlight, { passive: false });
-    window.addEventListener('pointerdown', onPointerDown, false);
-
-    // Touch Swipe Navigation for Mobile
-    let touchStartY = 0;
-    window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
-    window.addEventListener('touchend', (e) => {
-      const touchEndY = e.changedTouches[0].clientY;
-      const diff = touchStartY - touchEndY;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0 && flightState.activeSceneIndex < SPATIAL_SCENES.length - 1) {
-          jumpToSpatialScene(flightState.activeSceneIndex + 1);
-        } else if (diff < 0 && flightState.activeSceneIndex > 0) {
-          jumpToSpatialScene(flightState.activeSceneIndex - 1);
-        }
-      }
-    }, { passive: true });
-
-    // Keyboard Flight Controls (Up/Down Arrow, PageUp/PageDown)
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-        if (flightState.activeSceneIndex < SPATIAL_SCENES.length - 1) {
-          e.preventDefault();
-          jumpToSpatialScene(flightState.activeSceneIndex + 1);
-        }
-      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-        if (flightState.activeSceneIndex > 0) {
-          e.preventDefault();
-          jumpToSpatialScene(flightState.activeSceneIndex - 1);
-        }
-      }
-    });
-
-    // Tab Navigation Link Intercept for Warp Light Effect
-    document.querySelectorAll('.site-nav a, a[href]').forEach((link) => {
-      const href = link.getAttribute('href');
-      if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('mailto:') && !href.startsWith('http')) {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          triggerTabWarpEffect(href);
-        });
+        isRunning = true;
+        animate();
       }
     });
   }
 
   function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    if (!renderer || !camera) return;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const isMobile = width < 768;
+
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(isMobile ? 1.0 : Math.min(window.devicePixelRatio, 1.5));
   }
 
-  function onPointerMove(e) {
-    flightState.mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-    flightState.mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-
-    mouseVec.x = flightState.mouseX;
-    mouseVec.y = flightState.mouseY;
-
-    if (hoveredNode && tooltipEl) {
-      tooltipEl.style.left = `${e.clientX}px`;
-      tooltipEl.style.top = `${e.clientY}px`;
-    }
-  }
-
-  function onWheelFlight(e) {
-    // Intercept scroll to turn simple page scroll into 3D Spatial Scene Flight
-    if (flightState.scrollCooldown) return;
-
-    if (e.deltaY > 25 && flightState.activeSceneIndex < SPATIAL_SCENES.length - 1) {
-      flightState.scrollCooldown = true;
-      jumpToSpatialScene(flightState.activeSceneIndex + 1);
-      setTimeout(() => { flightState.scrollCooldown = false; }, 600);
-    } else if (e.deltaY < -25 && flightState.activeSceneIndex > 0) {
-      flightState.scrollCooldown = true;
-      jumpToSpatialScene(flightState.activeSceneIndex - 1);
-      setTimeout(() => { flightState.scrollCooldown = false; }, 600);
-    }
-  }
-
-  function onPointerDown() {
-    if (hoveredNode) {
-      triggerParticleBurst(hoveredNode.position, hoveredNode.userData.baseColor);
-      if (typeof window.playSound === 'function') window.playSound('quest');
-      if (typeof window.addXp === 'function') window.addXp(10, `Explored ${hoveredNode.userData.name}`);
-    }
-  }
-
-  function triggerParticleBurst(pos, colorHex) {
-    const burstCount = 25;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(burstCount * 3);
-    const velocities = [];
-
-    for (let i = 0; i < burstCount; i++) {
-      positions[i * 3] = pos.x;
-      positions[i * 3 + 1] = pos.y;
-      positions[i * 3 + 2] = pos.z;
-
-      velocities.push(new THREE.Vector3(
-        (Math.random() - 0.5) * 0.8,
-        (Math.random() - 0.5) * 0.8,
-        (Math.random() - 0.5) * 0.8
-      ));
-    }
-
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const material = new THREE.PointsMaterial({
-      color: colorHex,
-      size: 0.8,
-      transparent: true,
-      opacity: 1.0,
-      blending: THREE.AdditiveBlending
-    });
-
-    const pSystem = new THREE.Points(geometry, material);
-    scene.add(pSystem);
-
-    burstParticles.push({ system: pSystem, velocities: velocities, age: 0, maxAge: 40 });
-  }
-
-  // ── HUD Controls ───────────────────────────────────────────────────────
-  function setupHUDControls() {
-    const hudRight = document.querySelector('.hud-right');
-    if (!hudRight || document.getElementById('hud3dModeBtn')) return;
-
-    const controlsContainer = document.createElement('div');
-    controlsContainer.className = 'hud-3d-controls';
-    controlsContainer.innerHTML = `
-      <button id="hud3dModeBtn" class="hud-3d-btn" title="Toggle 3D Flight View">&gt; 3D: GLIDE</button>
-      <button id="hud3dResetBtn" class="hud-3d-btn" title="Reset Spatial Origin">&gt; RESET</button>
-    `;
-
-    hudRight.prepend(controlsContainer);
-
-    document.getElementById('hud3dResetBtn').addEventListener('click', () => {
-      jumpToSpatialScene(0);
-    });
-  }
-
-  // ── 3D Card Parallax Integration ───────────────────────────────────────
-  function init3DCardParallax() {
-    const cards = document.querySelectorAll('.sh-card, .beyond-card, .project-card, .info-panel, .stat, .contact-card, .movie-card');
-
-    cards.forEach((card) => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const cardX = e.clientX - rect.left - rect.width / 2;
-        const cardY = e.clientY - rect.top - rect.height / 2;
-
-        const tiltX = -(cardY / (rect.height / 2)) * 12;
-        const tiltY = (cardX / (rect.width / 2)) * 12;
-
-        card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(12px)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
-      });
-    });
-  }
-
-  // ── Render Loop ────────────────────────────────────────────────────────
   function animate() {
-    requestAnimationFrame(animate);
+    if (!isRunning) return;
+    animId = requestAnimationFrame(animate);
 
-    // 1. Interpolate Camera Flight through Spatial Waypoints
-    flightState.mouseSwayX += (flightState.mouseX * 3.5 - flightState.mouseSwayX) * 0.05;
-    flightState.mouseSwayY += (flightState.mouseY * 2.0 - flightState.mouseSwayY) * 0.05;
+    // Smooth mouse lerping
+    mouse.x += (mouse.targetX - mouse.x) * 0.05;
+    mouse.y += (mouse.targetY - mouse.y) * 0.05;
 
-    flightState.currentCamPos.x += (flightState.targetCamPos.x + flightState.mouseSwayX - flightState.currentCamPos.x) * 0.055;
-    flightState.currentCamPos.y += (flightState.targetCamPos.y - flightState.mouseSwayY - flightState.currentCamPos.y) * 0.055;
-    flightState.currentCamPos.z += (flightState.targetCamPos.z - flightState.currentCamPos.z) * 0.055;
+    // Station camera flight lerping
+    const targetConfig = STATIONS[currentStationKey] || STATIONS.identity;
 
-    flightState.currentCamLook.x += (flightState.targetCamLook.x - flightState.currentCamLook.x) * 0.055;
-    flightState.currentCamLook.y += (flightState.targetCamLook.y - flightState.currentCamLook.y) * 0.055;
-    flightState.currentCamLook.z += (flightState.targetCamLook.z - flightState.currentCamLook.z) * 0.055;
+    // Add gentle parallax offset to camera position
+    const desiredCamX = targetConfig.camPos.x + mouse.x * 0.6;
+    const desiredCamY = targetConfig.camPos.y - mouse.y * 0.4;
+    const desiredCamZ = targetConfig.camPos.z;
 
-    camera.position.copy(flightState.currentCamPos);
-    camera.lookAt(flightState.currentCamLook);
-    camera.rotation.z = -flightState.mouseX * 0.025;
+    camCurrent.x += (desiredCamX - camCurrent.x) * 0.045;
+    camCurrent.y += (desiredCamY - camCurrent.y) * 0.045;
+    camCurrent.z += (desiredCamZ - camCurrent.z) * 0.045;
 
-    // 2. Animate Grid
-    if (groundGrid && ceilingGrid) {
-      groundGrid.position.z = (groundGrid.position.z + 0.15) % 20 - 60;
-      ceilingGrid.position.z = (ceilingGrid.position.z + 0.15) % 20 - 60;
+    targetCurrent.x += (targetConfig.targetPos.x - targetCurrent.x) * 0.05;
+    targetCurrent.y += (targetConfig.targetPos.y - targetCurrent.y) * 0.05;
+    targetCurrent.z += (targetConfig.targetPos.z - targetCurrent.z) * 0.05;
+
+    camera.position.set(camCurrent.x, camCurrent.y, camCurrent.z);
+    camera.lookAt(targetCurrent.x, targetCurrent.y, targetCurrent.z);
+
+    // Update dynamic station spotlight position
+    if (stationPointLight && targetConfig.propPos) {
+      stationPointLight.position.set(
+        targetConfig.propPos.x,
+        targetConfig.propPos.y + 2.5,
+        targetConfig.propPos.z + 1.0
+      );
     }
 
-    // 3. Animate Starfield
-    if (particleSystem) {
-      const positions = particleSystem.geometry.attributes.position.array;
-      for (let i = 0; i < positions.length / 3; i++) {
-        positions[i * 3 + 2] += 0.25;
-        if (positions[i * 3 + 2] > camera.position.z + 10) {
-          positions[i * 3 + 2] = camera.position.z - 200;
-        }
-      }
-      particleSystem.geometry.attributes.position.needsUpdate = true;
-    }
-
-    // 4. Animate Interactive Geometries
-    interactiveNodes.forEach((node) => {
-      node.rotation.x += node.userData.rotSpeedX;
-      node.rotation.y += node.userData.rotSpeedY;
+    // Rotate 3D props
+    propGroups.forEach(group => {
+      group.children.forEach(child => {
+        if (child.userData.rotSpeedX) child.rotation.x += child.userData.rotSpeedX;
+        if (child.userData.rotSpeedY) child.rotation.y += child.userData.rotSpeedY;
+        if (child.userData.rotSpeedZ) child.rotation.z += child.userData.rotSpeedZ;
+      });
     });
 
-    // 5. Animate Particle Bursts
-    for (let i = burstParticles.length - 1; i >= 0; i--) {
-      const burst = burstParticles[i];
-      const positions = burst.system.geometry.attributes.position.array;
-
-      for (let j = 0; j < positions.length / 3; j++) {
-        positions[j * 3] += burst.velocities[j].x;
-        positions[j * 3 + 1] += burst.velocities[j].y;
-        positions[j * 3 + 2] += burst.velocities[j].z;
-      }
-      burst.system.geometry.attributes.position.needsUpdate = true;
-
-      burst.age++;
-      burst.system.material.opacity = 1 - burst.age / burst.maxAge;
-
-      if (burst.age >= burst.maxAge) {
-        scene.remove(burst.system);
-        burst.system.geometry.dispose();
-        burst.system.material.dispose();
-        burstParticles.splice(i, 1);
-      }
-    }
-
-    // 6. Raycasting Interactivity
-    raycaster.setFromCamera(mouseVec, camera);
-    const intersects = raycaster.intersectObjects(interactiveNodes, false);
-
-    if (intersects.length > 0) {
-      const node = intersects[0].object;
-
-      if (hoveredNode !== node) {
-        if (hoveredNode) {
-          hoveredNode.scale.set(1, 1, 1);
-          hoveredNode.userData.wireMat.emissiveIntensity = 0.45;
-        }
-
-        hoveredNode = node;
-        hoveredNode.scale.set(1.3, 1.3, 1.3);
-        hoveredNode.userData.wireMat.emissiveIntensity = 1.0;
-        document.body.style.cursor = 'pointer';
-
-        if (tooltipEl) {
-          tooltipEl.classList.add('active');
-          const title = tooltipEl.querySelector('.tooltip-title');
-          const status = tooltipEl.querySelector('.tooltip-status');
-          if (title) title.textContent = node.userData.name;
-          if (status) status.textContent = `[TYPE: ${node.userData.type}] ${node.userData.desc}`;
-        }
-      }
-    } else {
-      if (hoveredNode) {
-        hoveredNode.scale.set(1, 1, 1);
-        hoveredNode.userData.wireMat.emissiveIntensity = 0.45;
-        hoveredNode = null;
-        document.body.style.cursor = 'default';
-        if (tooltipEl) tooltipEl.classList.remove('active');
-      }
-    }
-
-    // Render Scene
     renderer.render(scene, camera);
   }
 
-  // ── Auto Start ─────────────────────────────────────────────────────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  function showFallback() {
+    if (canvasEl) {
+      canvasEl.style.display = 'none';
+    }
+    const fallback = document.getElementById('webgl-fallback');
+    if (fallback) {
+      fallback.style.display = 'block';
+    }
   }
 
+  // ── Public API ─────────────────────────────────────────────────────────────
+  window.ThreeWorld = {
+    init: init,
+
+    flyToStation: function (stationKey) {
+      if (!STATIONS[stationKey]) return;
+      currentStationKey = stationKey;
+
+      // Update UI feedback if present
+      const hudStationLabel = document.getElementById('hudStationLabel');
+      if (hudStationLabel) {
+        hudStationLabel.textContent = STATIONS[stationKey].name;
+      }
+    },
+
+    getCurrentStation: function () {
+      return currentStationKey;
+    },
+
+    getStations: function () {
+      return STATIONS;
+    },
+
+    toggleShadingMode: function () {
+      isWireframeMode = !isWireframeMode;
+      this.setWireframeMode(isWireframeMode);
+      return isWireframeMode;
+    },
+
+    setWireframeMode: function (enableWireframe) {
+      isWireframeMode = enableWireframe;
+
+      // Swap materials across all prop meshes
+      propGroups.forEach(group => {
+        group.children.forEach(child => {
+          if (child.isMesh && child.material !== accentWireMaterial) {
+            child.material = isWireframeMode ? wireframeMaterial : clayMaterial;
+          }
+        });
+      });
+
+      // Update HUD toggle button label
+      const toggleBtn = document.getElementById('toggleShadingBtn');
+      if (toggleBtn) {
+        toggleBtn.textContent = isWireframeMode ? '[ MODE // WIREFRAME ]' : '[ MODE // CLAY ]';
+        toggleBtn.setAttribute('aria-pressed', isWireframeMode ? 'true' : 'false');
+      }
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    window.ThreeWorld.init();
+  });
 })();
