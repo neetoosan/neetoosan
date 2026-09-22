@@ -4,7 +4,7 @@
 
 An interactive, single-page portfolio rendered as a navigable 3D spatial world. Instead of scrolling through static sections, visitors fly a camera between five "stations" — Identity, 3D Game Props, Engineering Systems, About, and Transmission — each staged with its own low-poly hard-surface prop, built with vanilla HTML/CSS/JavaScript and [Three.js](https://threejs.org/).
 
-**Live site:** [neetoosan.tech](https://neetoosan.tech)
+**Live site:** https://neetoosan.vercel.app
 
 ---
 
