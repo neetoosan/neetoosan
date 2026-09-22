@@ -43,6 +43,16 @@
     localStorage.setItem('n_theme', state.theme);
   }
 
+  // ── Icon Helpers ───────────────────────────────
+  // References the shared <symbol> sprite defined in index.html's <body>.
+  function icon(name) {
+    return `<svg class="icon"><use href="#icon-${name}"></use></svg>`;
+  }
+
+  function iconLabel(name, text) {
+    return `${icon(name)} ${text}`;
+  }
+
   // ── Audio Synthesizer (Web Audio API) ─────────
   let audioCtx = null;
   function getAudioCtx() {
@@ -200,7 +210,7 @@
       state.xp = state.xp - 100;
       saveState();
       playSound('level');
-      triggerToast('🏆 LEVEL UP!', `Successfully advanced to Level ${state.level}! System capabilities expanded.`);
+      triggerToast(iconLabel('trophy', 'LEVEL UP!'), `Successfully advanced to Level ${state.level}! System capabilities expanded.`);
     } else {
       saveState();
       if (reason) {
@@ -215,7 +225,7 @@
       state.quests[id].complete = true;
       saveState();
       playSound('quest');
-      triggerToast('✨ QUEST COMPLETE!', `${state.quests[id].name}: +${state.quests[id].xp} XP earned!`);
+      triggerToast(iconLabel('sparkle', 'QUEST COMPLETE!'), `${state.quests[id].name}: +${state.quests[id].xp} XP earned!`);
       setTimeout(() => {
         addXP(state.quests[id].xp);
       }, 1000);
@@ -234,7 +244,7 @@
     const toast = document.createElement('div');
     toast.className = 'quest-toast';
     toast.innerHTML = `
-      <div class="quest-toast-icon">⚡</div>
+      <div class="quest-toast-icon">${icon('zap')}</div>
       <div class="quest-toast-content">
         <h5>${title}</h5>
         <p>${body}</p>
@@ -270,7 +280,7 @@
       if (expQuest.visited.length === expQuest.target.length) {
         completeQuest('explorer');
       } else {
-        triggerToast('🔍 ARCHITECTURE LOGGED', `Mapped page "${pageId.toUpperCase()}" (${expQuest.visited.length}/${expQuest.target.length}).`);
+        triggerToast(iconLabel('search', 'ARCHITECTURE LOGGED'), `Mapped page "${pageId.toUpperCase()}" (${expQuest.visited.length}/${expQuest.target.length}).`);
         addXP(5);
       }
     }
@@ -287,10 +297,10 @@
       const soundBtn = document.createElement('button');
       soundBtn.className = 'hud-btn';
       soundBtn.title = 'Mute System Sounds';
-      soundBtn.innerHTML = state.muted ? '🔇' : '🔊';
+      soundBtn.innerHTML = state.muted ? icon('volume-x') : icon('volume');
       soundBtn.addEventListener('click', () => {
         state.muted = !state.muted;
-        soundBtn.innerHTML = state.muted ? '🔇' : '🔊';
+        soundBtn.innerHTML = state.muted ? icon('volume-x') : icon('volume');
         saveState();
         if (!state.muted) playSound('click');
       });
@@ -298,7 +308,7 @@
       const helpBtn = document.createElement('button');
       helpBtn.className = 'hud-btn';
       helpBtn.title = 'How to Play Onboarding';
-      helpBtn.innerHTML = '❓';
+      helpBtn.innerHTML = icon('help-circle');
       helpBtn.addEventListener('click', () => {
         showOnboarding(true);
       });
@@ -306,7 +316,7 @@
       const terminalBtn = document.createElement('button');
       terminalBtn.className = 'hud-btn';
       terminalBtn.title = 'Toggle System Console';
-      terminalBtn.innerHTML = '📟';
+      terminalBtn.innerHTML = icon('terminal');
       terminalBtn.addEventListener('click', () => {
         const termOverlay = document.getElementById('terminalOverlay');
         if (termOverlay) {
@@ -337,29 +347,29 @@
           
           <div class="onboarding-steps">
             <div class="onboarding-step">
-              <span class="onboarding-step-icon">🏆</span>
+              <span class="onboarding-step-icon">${icon('trophy')}</span>
               <h4>Level Up & XP</h4>
               <p>Explore the architecture, interact with details, and scroll pages to earn XP and level up your system access.</p>
             </div>
             <div class="onboarding-step">
-              <span class="onboarding-step-icon">🎯</span>
+              <span class="onboarding-step-icon">${icon('target')}</span>
               <h4>Quest Log Achievements</h4>
               <p>Complete active operations like finding Easter Eggs, examining the tech stack, or reading philosophy logs.</p>
             </div>
             <div class="onboarding-step">
-              <span class="onboarding-step-icon">⌨️</span>
+              <span class="onboarding-step-icon">${icon('keyboard')}</span>
               <h4>Hacker Terminal</h4>
               <p>Run secret commands by entering the Konami Code (↑ ↑ ↓ ↓ ← → ← → B A) anywhere on the website.</p>
             </div>
             <div class="onboarding-step">
-              <span class="onboarding-step-icon">🔊</span>
+              <span class="onboarding-step-icon">${icon('volume')}</span>
               <h4>Synthesizer Sounds</h4>
               <p>Hear vintage synth chords and terminal feedback clicks. Toggle audio from the top HUD anytime.</p>
             </div>
           </div>
-          
+
           <div class="onboarding-actions">
-            <button class="btn btn-primary" id="enterSystemBtn" style="padding: 1rem 3rem;">INITIALIZE SYSTEM ACCESS 🚀</button>
+            <button class="btn btn-primary" id="enterSystemBtn" style="padding: 1rem 3rem;">${iconLabel('rocket', 'INITIALIZE SYSTEM ACCESS')}</button>
           </div>
         </div>
       `;
@@ -370,7 +380,7 @@
         saveState();
         overlay.classList.remove('active');
         playSound('boot');
-        triggerToast('🚀 SYSTEM BOOT', 'Interface calibrated. Welcome aboard.');
+        triggerToast(iconLabel('rocket', 'SYSTEM BOOT'), 'Interface calibrated. Welcome aboard.');
       });
     }
 
@@ -428,9 +438,9 @@
       toggleBtn.className = 'theme-toggle-btn';
       
       const getThemeLabel = (t) => {
-        if (t === 'rpg') return '💀 RPG MODE';
-        if (t === 'holodeck') return '🔮 HOLODECK';
-        return '💻 CYBER MODE';
+        if (t === 'rpg') return iconLabel('skull', 'RPG MODE');
+        if (t === 'holodeck') return iconLabel('orb', 'HOLODECK');
+        return iconLabel('monitor', 'CYBER MODE');
       };
 
       toggleBtn.innerHTML = getThemeLabel(state.theme);
@@ -444,7 +454,7 @@
         toggleBtn.innerHTML = getThemeLabel(state.theme);
         
         playSound('boot');
-        triggerToast('🔮 THEME INITIALIZED', `Switched spatial theme to: ${state.theme.toUpperCase()}`);
+        triggerToast(iconLabel('orb', 'THEME INITIALIZED'), `Switched spatial theme to: ${state.theme.toUpperCase()}`);
         
         applyThemeDOMAdjustments(state.theme);
         if (typeof window.set3DTheme === 'function') {
@@ -569,10 +579,10 @@
       
       onboardingActions.innerHTML = `
         <div class="rpg-battle-menu">
-          <button class="rpg-btn" data-action="fight">⚡ FIGHT</button>
-          <button class="rpg-btn" data-action="bag">🎒 BAG</button>
-          <button class="rpg-btn" data-action="pokemon">👾 POKÉMON</button>
-          <button class="rpg-btn" data-action="run">🏃 RUN</button>
+          <button class="rpg-btn" data-action="fight">${iconLabel('zap', 'FIGHT')}</button>
+          <button class="rpg-btn" data-action="bag">${iconLabel('bag', 'BAG')}</button>
+          <button class="rpg-btn" data-action="pokemon">${iconLabel('ghost', 'POKÉMON')}</button>
+          <button class="rpg-btn" data-action="run">${iconLabel('log-out', 'RUN')}</button>
         </div>
       `;
       
@@ -584,7 +594,7 @@
             saveState();
             document.getElementById('onboardingModal').classList.remove('active');
             playSound('boot');
-            triggerToast('⚔️ BATTLE START', 'Trainer Neetoosan challenges you! Find all logs.');
+            triggerToast(iconLabel('swords', 'BATTLE START'), 'Trainer Neetoosan challenges you! Find all logs.');
           } else if (action === 'bag') {
             window.location.href = 'projects.html';
           } else if (action === 'pokemon') {
@@ -599,9 +609,9 @@
       onboardingH2.innerHTML = '◢ NEETOOSAN SYSTEM ONBOARDING ◣';
       onboardingSubtitle.innerHTML = 'System Version 27.6.0 · Interactive Terminal Console Enabled';
       onboardingActions.innerHTML = `
-        <button class="btn btn-primary" id="enterSystemBtn" style="padding: 1rem 3rem;">INITIALIZE SYSTEM ACCESS 🚀</button>
+        <button class="btn btn-primary" id="enterSystemBtn" style="padding: 1rem 3rem;">${iconLabel('rocket', 'INITIALIZE SYSTEM ACCESS')}</button>
       `;
-      
+
       const enterBtn = document.getElementById('enterSystemBtn');
       if (enterBtn) {
         enterBtn.addEventListener('click', () => {
@@ -609,7 +619,7 @@
           saveState();
           document.getElementById('onboardingModal').classList.remove('active');
           playSound('boot');
-          triggerToast('🚀 SYSTEM BOOT', 'Interface calibrated. Welcome aboard.');
+          triggerToast(iconLabel('rocket', 'SYSTEM BOOT'), 'Interface calibrated. Welcome aboard.');
         });
       }
     }
@@ -696,7 +706,7 @@
         printLine('ACTIVE QUEST JOURNAL:', 'info');
         for (let id in state.quests) {
           const q = state.quests[id];
-          const status = q.complete ? '🟢 [COMPLETED]' : '🔴 [ACTIVE]';
+          const status = q.complete ? '[COMPLETE]' : '[ACTIVE]  ';
           printLine(`  ${status} - ${q.name} (+${q.xp} XP)`);
           printLine(`               ${q.desc}`);
         }

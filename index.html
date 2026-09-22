@@ -17,6 +17,136 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <!-- Icon Sprite: shared line-icon set (used via <svg class="icon"><use href="#icon-NAME"/></svg>).
+       Paths carry no fill/stroke of their own so they inherit color/weight from the .icon CSS rule. -->
+  <svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+    <defs>
+      <symbol id="icon-terminal" viewBox="0 0 24 24">
+        <polyline points="4 17 10 11 4 5"></polyline>
+        <line x1="12" y1="19" x2="20" y2="19"></line>
+      </symbol>
+      <symbol id="icon-gamepad" viewBox="0 0 24 24">
+        <rect x="2" y="6" width="20" height="12" rx="6"></rect>
+        <line x1="6" y1="12" x2="10" y2="12"></line>
+        <line x1="8" y1="10" x2="8" y2="14"></line>
+        <circle cx="15" cy="10.5" r="1"></circle>
+        <circle cx="18" cy="13.5" r="1"></circle>
+      </symbol>
+      <symbol id="icon-monitor" viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="12" rx="1"></rect>
+        <line x1="8" y1="20" x2="16" y2="20"></line>
+        <line x1="12" y1="16" x2="12" y2="20"></line>
+      </symbol>
+      <symbol id="icon-rocket" viewBox="0 0 24 24">
+        <path d="M12 2c3 2 5 6 5 10 0 2-1 4-2 5l-1 3-2-2-2 2-1-3c-1-1-2-3-2-5 0-4 2-8 5-10z"></path>
+        <circle cx="12" cy="10" r="1.6"></circle>
+        <path d="M9 16c-1.5 1-2 3-2 5 2 0 4-.5 5-2"></path>
+        <path d="M15 16c1.5 1 2 3 2 5-2 0-4-.5-5-2"></path>
+      </symbol>
+      <symbol id="icon-tag" viewBox="0 0 24 24">
+        <path d="M20.59 13.41 13.42 20.59a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+      </symbol>
+      <symbol id="icon-lightbulb" viewBox="0 0 24 24">
+        <path d="M9 18h6"></path>
+        <path d="M10 22h4"></path>
+        <path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.3h6c0-1.1.4-1.8 1-2.3A7 7 0 0 0 12 2z"></path>
+      </symbol>
+      <symbol id="icon-palette" viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 1 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.2 5.2 0 0 0 22 10.5C22 5.8 17.5 2 12 2z"></path>
+        <circle cx="7" cy="10" r="1"></circle>
+        <circle cx="10" cy="6.5" r="1"></circle>
+        <circle cx="15" cy="6.5" r="1"></circle>
+        <circle cx="17.5" cy="10.5" r="1"></circle>
+      </symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </symbol>
+      <symbol id="icon-bike" viewBox="0 0 24 24">
+        <circle cx="6" cy="17" r="3.5"></circle>
+        <circle cx="18" cy="17" r="3.5"></circle>
+        <path d="M6 17l4-8h4l3 8"></path>
+        <path d="M10 9l3 4"></path>
+        <circle cx="15" cy="6" r="1.3"></circle>
+      </symbol>
+      <symbol id="icon-trophy" viewBox="0 0 24 24">
+        <path d="M8 21h8"></path>
+        <path d="M12 17v4"></path>
+        <path d="M7 4h10v5a5 5 0 0 1-10 0V4z"></path>
+        <path d="M7 5H4a3 3 0 0 0 3 5"></path>
+        <path d="M17 5h3a3 3 0 0 1-3 5"></path>
+      </symbol>
+      <symbol id="icon-sparkle" viewBox="0 0 24 24">
+        <path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3z"></path>
+      </symbol>
+      <symbol id="icon-zap" viewBox="0 0 24 24">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </symbol>
+      <symbol id="icon-volume" viewBox="0 0 24 24">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+        <path d="M18.5 6a9 9 0 0 1 0 12"></path>
+      </symbol>
+      <symbol id="icon-volume-x" viewBox="0 0 24 24">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="16" y1="9" x2="22" y2="15"></line>
+        <line x1="22" y1="9" x2="16" y2="15"></line>
+      </symbol>
+      <symbol id="icon-help-circle" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2-3 4"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </symbol>
+      <symbol id="icon-target" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"></circle>
+        <circle cx="12" cy="12" r="5"></circle>
+        <circle cx="12" cy="12" r="1.4"></circle>
+      </symbol>
+      <symbol id="icon-keyboard" viewBox="0 0 24 24">
+        <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+        <line x1="6" y1="10" x2="6.01" y2="10"></line>
+        <line x1="10" y1="10" x2="10.01" y2="10"></line>
+        <line x1="14" y1="10" x2="14.01" y2="10"></line>
+        <line x1="18" y1="10" x2="18.01" y2="10"></line>
+        <line x1="8" y1="14" x2="16" y2="14"></line>
+      </symbol>
+      <symbol id="icon-skull" viewBox="0 0 24 24">
+        <path d="M12 3a7 7 0 0 0-7 7c0 2.5 1.2 4 2.3 5.2.5.6.7 1 .7 1.8v1c0 .6.4 1 1 1h1v-2h1v2h2v-2h1v2h1a1 1 0 0 0 1-1v-1c0-.8.2-1.2.7-1.8C17.8 14 19 12.5 19 10a7 7 0 0 0-7-7z"></path>
+        <circle cx="9.3" cy="10.5" r="1.3"></circle>
+        <circle cx="14.7" cy="10.5" r="1.3"></circle>
+      </symbol>
+      <symbol id="icon-orb" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8"></circle>
+        <path d="M12 8l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z"></path>
+      </symbol>
+      <symbol id="icon-bag" viewBox="0 0 24 24">
+        <path d="M6 8h12l1 12H5L6 8z"></path>
+        <path d="M9 8a3 3 0 0 1 6 0"></path>
+      </symbol>
+      <symbol id="icon-ghost" viewBox="0 0 24 24">
+        <path d="M12 3a7 7 0 0 0-7 7v9l2.5-2 2 2 2.5-2 2.5 2 2-2 2.5 2v-9a7 7 0 0 0-7-7z"></path>
+        <circle cx="9.5" cy="10" r="1"></circle>
+        <circle cx="14.5" cy="10" r="1"></circle>
+      </symbol>
+      <symbol id="icon-log-out" viewBox="0 0 24 24">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+      </symbol>
+      <symbol id="icon-swords" viewBox="0 0 24 24">
+        <line x1="4" y1="4" x2="20" y2="20"></line>
+        <path d="M14 4l6 2-2 6"></path>
+        <line x1="20" y1="4" x2="4" y2="20"></line>
+        <path d="M10 4L4 6l2 6"></path>
+      </symbol>
+    </defs>
+  </svg>
+
   <!-- 3D Spatial Canvas -->
   <canvas id="webgl-canvas" aria-label="Interactive 3D spatial world environment"></canvas>
 
@@ -290,23 +420,23 @@
             <div class="glass-card" style="padding:1.4rem; margin-bottom:1.5rem;">
               <p class="station-kicker" style="font-size:0.75rem;">THE EVOLUTION ROAD</p>
               <div class="journey-pipeline">
-                <span class="journey-step">🐍 Python</span>
+                <span class="journey-step"><svg class="icon"><use href="#icon-terminal"></use></svg> Python</span>
                 <span class="journey-arrow">→</span>
-                <span class="journey-step">🎮 C++ Games</span>
+                <span class="journey-step"><svg class="icon"><use href="#icon-gamepad"></use></svg> C++ Games</span>
                 <span class="journey-arrow">→</span>
-                <span class="journey-step">🖥️ PySide6</span>
+                <span class="journey-step"><svg class="icon"><use href="#icon-monitor"></use></svg> PySide6</span>
                 <span class="journey-arrow">→</span>
-                <span class="journey-step">🚀 Flutter</span>
+                <span class="journey-step"><svg class="icon"><use href="#icon-rocket"></use></svg> Flutter</span>
                 <span class="journey-arrow">→</span>
-                <span class="journey-step">💰 Sold Apps</span>
+                <span class="journey-step"><svg class="icon"><use href="#icon-tag"></use></svg> Sold Apps</span>
               </div>
             </div>
 
             <!-- Fun Fact Callout -->
             <div class="fun-fact-box">
-              <span class="fun-fact-icon">💡</span>
+              <span class="fun-fact-icon"><svg class="icon"><use href="#icon-lightbulb"></use></svg></span>
               <div class="fun-fact-text">
-                <strong style="color:#fff;">Fun Fact:</strong> I started coding because someone told me Python was <em>"harder than understanding women."</em> Challenge accepted. The jury's still out on which is actually harder. 😄
+                <strong style="color:#fff;">Fun Fact:</strong> I started coding because someone told me Python was <em>"harder than understanding women."</em> Challenge accepted. The jury's still out on which is actually harder.
               </div>
             </div>
           </div>
@@ -319,7 +449,7 @@
             </h3>
 
             <p class="story-lead">
-              I’m <strong class="story-highlight">Israel Oyekanmi</strong>, also known as <strong>Neetoosan</strong> — a naturally curious creative who stumbled into code and never looked back. My journey started with a simple question: <em>"What's harder to understand than a lady?"</em> Someone said Python. I laughed, then I tried it. Turns out, they weren't entirely wrong but I was completely hooked. 🐍
+              I’m <strong class="story-highlight">Israel Oyekanmi</strong>, also known as <strong>Neetoosan</strong> — a naturally curious creative who stumbled into code and never looked back. My journey started with a simple question: <em>"What's harder to understand than a lady?"</em> Someone said Python. I laughed, then I tried it. Turns out, they weren't entirely wrong but I was completely hooked.
             </p>
 
             <p class="story-text">
@@ -354,7 +484,7 @@
             <!-- 3D Art & Sculpting -->
             <article class="beyond-card">
               <div>
-                <div class="beyond-card-icon">🎨</div>
+                <div class="beyond-card-icon"><svg class="icon"><use href="#icon-palette"></use></svg></div>
                 <h4 class="beyond-card-title">3D Animation &amp; Sculpting</h4>
                 <p class="beyond-desc">
                   I design, sculpt, and animate in three dimensions using Blender. From digital character sculpting and high-poly prop creation to hard-surface modeling, rigging, and keyframe 3D animation, I bring visual depth and artistic precision to software engineering.
@@ -372,7 +502,7 @@
             <!-- Stories That Challenge -->
             <article class="beyond-card">
               <div>
-                <div class="beyond-card-icon">📚</div>
+                <div class="beyond-card-icon"><svg class="icon"><use href="#icon-book"></use></svg></div>
                 <h4 class="beyond-card-title">Stories That Challenge</h4>
                 <p class="beyond-desc">
                   I'm a fan of psychological mysteries, manhwas, anime, and anything that makes you question what's real. Unraveling intricate narratives mirrors the deep satisfaction of solving complex architecture and debugging distributed systems.
@@ -390,7 +520,7 @@
             <!-- Movement & Balance -->
             <article class="beyond-card">
               <div>
-                <div class="beyond-card-icon">🚴</div>
+                <div class="beyond-card-icon"><svg class="icon"><use href="#icon-bike"></use></svg></div>
                 <h4 class="beyond-card-title">Movement &amp; Creation</h4>
                 <p class="beyond-desc">
                   Cycling keeps me grounded, cooking keeps me experimenting, and anime keeps me inspired. Balance matters, and these moments away from the screen make me a sharper, more resilient engineer when I return.
@@ -403,6 +533,16 @@
                 <span class="beyond-tag">Mindset</span>
               </div>
             </article>
+          </div>
+
+          <!-- Life Off-Screen — Photo Gallery -->
+          <div class="life-gallery">
+            <div class="life-gallery-item">
+              <img src="asset/about-israel-1.jpg" alt="Israel Oyekanmi with arms outstretched, surrounded by his favorite music tracks" class="life-gallery-img" />
+            </div>
+            <div class="life-gallery-item">
+              <img src="asset/about-israel-2.jpg" alt="Candid portrait of Israel Oyekanmi on the street" class="life-gallery-img" />
+            </div>
           </div>
         </div>
 

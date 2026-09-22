@@ -32,6 +32,20 @@
   padding: 0;
 }
 
+/* Shared line-icon set (see <symbol> sprite at top of <body>) */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+}
+
 html, body {
   width: 100%;
   height: 100%;
@@ -720,6 +734,9 @@ html, body {
 }
 
 .journey-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   background: rgba(255, 255, 255, 0.08);
@@ -727,6 +744,12 @@ html, body {
   padding: 0.3rem 0.65rem;
   border-radius: 2px;
   color: #fff;
+}
+
+.journey-step .icon {
+  width: 0.95em;
+  height: 0.95em;
+  color: var(--text-secondary);
 }
 
 .journey-arrow {
@@ -758,8 +781,15 @@ html, body {
 }
 
 .fun-fact-icon {
+  display: inline-flex;
   font-size: 1.4rem;
   line-height: 1;
+}
+
+.fun-fact-icon .icon {
+  width: 1em;
+  height: 1em;
+  color: #fff;
 }
 
 .fun-fact-text {
@@ -779,6 +809,35 @@ html, body {
   margin-top: 1.2rem;
 }
 
+.life-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.life-gallery-item {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background: #000;
+}
+
+.life-gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08);
+  transition: var(--transition-med);
+}
+
+.life-gallery-item:hover .life-gallery-img {
+  filter: grayscale(0.2) contrast(1.04);
+  transform: scale(1.03);
+}
+
 .beyond-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -796,8 +855,15 @@ html, body {
 }
 
 .beyond-card-icon {
+  display: inline-flex;
   font-size: 1.8rem;
   margin-bottom: 0.8rem;
+}
+
+.beyond-card-icon .icon {
+  width: 1em;
+  height: 1em;
+  color: #fff;
 }
 
 .beyond-card-title {
