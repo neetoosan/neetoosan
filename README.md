@@ -1,4 +1,4 @@
-# Neetoosan — Portfolio
+# Neetoosan
 
 **Israel Oyekanmi** (aka **Neetoosan**) — Software Engineer × 3D Prop Artist
 
