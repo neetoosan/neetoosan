@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://neetoosan.vercel.app/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://neetoosan.vercel.app/asset/about.png</image:loc>
+      <image:title>Israel Oyekanmi — Neetoosan</image:title>
+      <image:caption>Portrait of Israel Oyekanmi, Software Engineer and 3D Prop Artist</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://neetoosan.vercel.app/asset/about-israel-1.jpg</image:loc>
+      <image:title>Israel Oyekanmi with his favorite music tracks</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://neetoosan.vercel.app/asset/about-israel-2.jpg</image:loc>
+      <image:title>Candid portrait of Israel Oyekanmi</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://neetoosan.vercel.app/asset/miva-israel-1.jpg</image:loc>
+      <image:title>Israel Oyekanmi in graduation regalia, MIVA Open University</image:title>
+      <image:caption>Israel Oyekanmi, Cybersecurity student at MIVA Open University</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://neetoosan.vercel.app/asset/miva-israel-2.jpg</image:loc>
+      <image:title>Israel Oyekanmi, MIVA Open University academic regalia</image:title>
+      <image:caption>Israel Oyekanmi, Cybersecurity student at MIVA Open University</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://neetoosan.vercel.app/asset/logo_concept.png</image:loc>
+      <image:title>Neetoosan Logo</image:title>
+    </image:image>
+  </url>
+</urlset>

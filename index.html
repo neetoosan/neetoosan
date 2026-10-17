@@ -3,18 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Neetoosan — Software Engineer & 3D Prop/Asset Artist. Minimalist black-and-white portfolio featuring interactive 3D spatial world, Instagram renders, and engineering systems." />
+  <meta name="description" content="Israel Oyekanmi (Neetoosan) — Software Engineer, Cybersecurity student at MIVA Open University, and 3D Prop/Asset Artist. Minimalist black-and-white portfolio featuring an interactive 3D spatial world, Instagram renders, and engineering systems." />
+  <meta name="keywords" content="Israel Oyekanmi, Neetoosan, Software Engineer, Cybersecurity, MIVA Open University, 3D Prop Artist, Flutter Developer, Python Developer, Portfolio" />
+  <meta name="author" content="Israel Oyekanmi" />
   <meta name="google-site-verification" content="jtZn-OVnVurJu6HpZCWK9wECkN3kCTyDbnpj1rC1Q68" />
+  <link rel="canonical" href="https://neetoosan.vercel.app/" />
   <title>Neetoosan | Software Engineer & 3D Prop Artist</title>
-  
+
+  <!-- Open Graph / Social Previews -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://neetoosan.vercel.app/" />
+  <meta property="og:title" content="Israel Oyekanmi (Neetoosan) | Software Engineer & 3D Prop Artist" />
+  <meta property="og:description" content="Software Engineer, Cybersecurity student at MIVA Open University, and 3D Prop/Asset Artist. Explore an interactive 3D spatial portfolio of game props, engineering systems, and more." />
+  <meta property="og:image" content="https://neetoosan.vercel.app/asset/about.png" />
+  <meta property="og:image:alt" content="Israel Oyekanmi — Neetoosan" />
+  <meta property="og:site_name" content="Neetoosan Portfolio" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Israel Oyekanmi (Neetoosan) | Software Engineer & 3D Prop Artist" />
+  <meta name="twitter:description" content="Software Engineer, Cybersecurity student at MIVA Open University, and 3D Prop/Asset Artist." />
+  <meta name="twitter:image" content="https://neetoosan.vercel.app/asset/about.png" />
+
   <link rel="icon" type="image/png" href="asset/favicon.png" />
   <link rel="apple-touch-icon" href="asset/favicon.png" />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  
+
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Structured Data: Person -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Israel Oyekanmi",
+    "alternateName": "Neetoosan",
+    "url": "https://neetoosan.vercel.app/",
+    "image": "https://neetoosan.vercel.app/asset/about.png",
+    "jobTitle": "Software Engineer & 3D Prop Artist",
+    "description": "Software Engineer and 3D hard-surface prop artist, currently studying Cybersecurity at MIVA Open University.",
+    "sameAs": [
+      "https://github.com/neetoosan",
+      "https://www.instagram.com/neetoosan/",
+      "https://www.linkedin.com/in/israel-oyekanmi-876148392/"
+    ]
+  }
+  </script>
 </head>
 <body>
   <!-- Icon Sprite: shared line-icon set (used via <svg class="icon"><use href="#icon-NAME"/></svg>).
@@ -137,6 +174,11 @@
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
         <polyline points="16 17 21 12 16 7"></polyline>
         <line x1="21" y1="12" x2="9" y2="12"></line>
+      </symbol>
+      <symbol id="icon-graduation-cap" viewBox="0 0 24 24">
+        <path d="M2 9l10-5 10 5-10 5-10-5z"></path>
+        <path d="M6 11v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"></path>
+        <path d="M22 9v6"></path>
       </symbol>
       <symbol id="icon-swords" viewBox="0 0 24 24">
         <line x1="4" y1="4" x2="20" y2="20"></line>
@@ -404,7 +446,7 @@
           <div>
             <div class="profile-portrait-card" style="margin-bottom:1.5rem;">
               <div class="profile-photo-wrapper">
-                <img src="asset/about.png" alt="Israel Oyekanmi — Neetoosan" class="profile-photo-img" />
+                <img src="asset/about.png" alt="Israel Oyekanmi — Neetoosan" class="profile-photo-img" loading="lazy" />
                 <div class="profile-photo-badge">ISRAEL OYEKANMI // NEETOOSAN</div>
               </div>
               <div class="profile-meta-row">
@@ -429,6 +471,26 @@
                 <span class="journey-step"><svg class="icon"><use href="#icon-rocket"></use></svg> Flutter</span>
                 <span class="journey-arrow">→</span>
                 <span class="journey-step"><svg class="icon"><use href="#icon-tag"></use></svg> Sold Apps</span>
+              </div>
+            </div>
+
+            <!-- Education -->
+            <div class="glass-card" style="padding:1.4rem; margin-bottom:1.5rem;">
+              <p class="station-kicker" style="font-size:0.75rem;">EDUCATION</p>
+              <h4 class="spec-category-title" style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.8rem;">
+                <svg class="icon"><use href="#icon-graduation-cap"></use></svg>
+                Cybersecurity @ MIVA Open University
+              </h4>
+              <p class="beyond-desc" style="margin-bottom:1rem;">
+                Currently studying Cybersecurity at MIVA Open University, deepening my grounding in secure systems design, applied cryptography, and the defensive side of the software I build professionally.
+              </p>
+              <div class="education-photos">
+                <div class="education-photo">
+                  <img src="asset/miva-israel-1.jpg" alt="Israel Oyekanmi in graduation cap and gown bearing the MIVA Open University crest" loading="lazy" />
+                </div>
+                <div class="education-photo">
+                  <img src="asset/miva-israel-2.jpg" alt="Israel Oyekanmi smiling in MIVA Open University academic regalia" loading="lazy" />
+                </div>
               </div>
             </div>
 
@@ -538,10 +600,10 @@
           <!-- Life Off-Screen — Photo Gallery -->
           <div class="life-gallery">
             <div class="life-gallery-item">
-              <img src="asset/about-israel-1.jpg" alt="Israel Oyekanmi with arms outstretched, surrounded by his favorite music tracks" class="life-gallery-img" />
+              <img src="asset/about-israel-1.jpg" alt="Israel Oyekanmi with arms outstretched, surrounded by his favorite music tracks" class="life-gallery-img" loading="lazy" />
             </div>
             <div class="life-gallery-item">
-              <img src="asset/about-israel-2.jpg" alt="Candid portrait of Israel Oyekanmi on the street" class="life-gallery-img" />
+              <img src="asset/about-israel-2.jpg" alt="Candid portrait of Israel Oyekanmi on the street" class="life-gallery-img" loading="lazy" />
             </div>
           </div>
         </div>
